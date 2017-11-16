@@ -164,3 +164,15 @@ buffer_reset(buffer_t *buf)
 
     return OK;
 }
+
+uint8_t *
+buffer_data(buffer_t *buf)
+{
+    CHECK_NULL_RETURN_NULL(buf, "input params buf == NULL.");
+
+    return &buf->data;
+}
+
+
+
+

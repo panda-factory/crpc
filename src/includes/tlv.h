@@ -15,6 +15,12 @@ typedef enum _e_TLV_TYPE {
     TLV_TYPE_HASH_VALUE,
 } e_TLV_TYPE;
 
+typedef enum _e_CRPC_TYPE{
+    T_NONE,
+    T_PLUGIN_NAME,
+    T_TERMINATOR,
+} e_CRPC_TYPE;
+
 int
 tlv_init(tlv_t *tlv, const e_TLV_TYPE type, const uint32_t length, const void *value);
 

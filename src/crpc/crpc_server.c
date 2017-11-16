@@ -5,35 +5,74 @@
 #include <sys/epoll.h>
 #include <sys/un.h>
 
+#include "tlv.h"
 #include "crpc_server.h"
 #include "define.h"
 
 int srv_fd = -1;
 int epoll_fd = -1;
-list_table_t cli_list;
+list_table_t plugin_list;
 
 #if DESC("内部函数")
+/**
+ * 说明：
+ * 返回：
+ * 备注：
+ */
 
-static crpc_cli_info_t *
-crpc_cli_info_new()
+/**
+ * 说明：crpc注册
+ * 返回：
+ * 备注：
+ */
+static int
+crpc_method_register(crpc_plugin_inst_t *plugin_inst)
 {
-    crpc_cli_info_t *cli_info = NULL;
+    const tlv_t *iter = NULL;
+    const uint8_t *crpc_data = NULL;
 
-    cli_info = (crpc_cli_info_t *)malloc(sizeof(crpc_cli_info_t));
-    CHECK_NULL_RETURN_NULL(cli_info, "malloc failed.");
-    memset(cli_info, 0, sizeof(crpc_cli_info_t));
+    CHECK_NULL_RETURN_ERROR(plugin_inst, "input param plugin_inst = NULL,");
+    CHECK_NULL_RETURN_ERROR(plugin_inst->recv_buf, "plugin recv_buf is NULL.");
 
-    cli_info->send_buf = buffer_new(BUFFER_SIZE);
-    cli_info->recv_buf = buffer_new(BUFFER_SIZE);
-    bzero(cli_info->send_buf, BUFFER_SIZE);
-    bzero(cli_info->recv_buf, BUFFER_SIZE);
+    crpc_data = buffer_data(plugin_inst->recv_buf) + sizeof(crpc_msg_head_t);
 
-    return cli_info;
+    for (iter = (tlv_t *)crpc_data; T_TERMINATOR != iter->type; iter = tlv_next((tlv_t *)iter)) {
+        if (T_PLUGIN_NAME == iter->type) {
+            plugin_inst->name = strdup(iter->value);
+            CHECK_NULL_RETURN_ERROR(plugin_inst->name, "strdup() failed when register plugin name.");
+        }
+    }
+
+    plugin_inst->flag_register = true;
+
+    return OK;
+}
+
+/**
+ * 说明：申请crpc客户端内存，并初始化
+ * 返回：crpc_plugin_inst_t *
+ * 备注：返回值外部释放
+ */
+static crpc_plugin_inst_t *
+crpc_plugin_inst_new()
+{
+    crpc_plugin_inst_t *plugin_inst = NULL;
+
+    plugin_inst = (crpc_plugin_inst_t *)malloc(sizeof(crpc_plugin_inst_t));
+    CHECK_NULL_RETURN_NULL(plugin_inst, "malloc failed.");
+    memset(plugin_inst, 0, sizeof(crpc_plugin_inst_t));
+
+    plugin_inst->send_buf = buffer_new(BUFFER_SIZE);
+    plugin_inst->recv_buf = buffer_new(BUFFER_SIZE);
+    bzero(plugin_inst->send_buf, BUFFER_SIZE);
+    bzero(plugin_inst->recv_buf, BUFFER_SIZE);
+
+    return plugin_inst;
 }
 
 /**
  * 说明: 创建服务器sockfd，并对其监听
- * @return: 失败直接退出
+ * 返回：失败直接退出
  */
 static void
 crpc_srv_init()
@@ -69,7 +108,7 @@ crpc_srv_init()
 
 /**
  * 说明: 接入客户端sockfd
- * @return: success: accept_fd; failed: 进程退出
+ * 返回：success: accept_fd; failed: 进程退出
  */
 static int
 crpc_srv_awaken()
@@ -78,9 +117,9 @@ crpc_srv_awaken()
     unsigned int cli_addr_len;
     struct sockaddr_un cli_addr;
     struct epoll_event event_register;
-    crpc_cli_info_t *cli_info = NULL;
+    crpc_plugin_inst_t *plugin_inst = NULL;
 
-    cli_info = crpc_cli_info_new();
+    plugin_inst = crpc_plugin_inst_new();
 
     cli_fd = accept(srv_fd, (struct sockaddr *)&cli_addr, &cli_addr_len);
     if (cli_fd < 0) {
@@ -88,8 +127,8 @@ crpc_srv_awaken()
         return ERROR;
     }
 
-    cli_info->sk_fd = cli_fd;
-    list_append(&cli_list, &cli_info->list_node);
+    plugin_inst->sk_fd = cli_fd;
+    list_append(&plugin_list, &plugin_inst->list_node);
 
     /* epoll注册服务器监听socket*/
     event_register.data.fd = cli_fd;
@@ -100,16 +139,48 @@ crpc_srv_awaken()
     return OK;
 }
 
+/**
+ * 说明：crpc方法调度函数
+ * 返回：
+ */
+static int
+crpc_method_dispatch(crpc_plugin_inst_t *plugin_inst)
+{
+    return OK;
+}
+
+/**
+ * 说明：客户端接收crpc消息
+ * 返回：
+ */
+static int
+crpc_plugin_recv_msg(crpc_plugin_inst_t *plugin_inst)
+{
+    char recv_buf[BUFFER_SIZE];
+
+    read(plugin_inst->sk_fd, recv_buf, BUFFER_SIZE);
+
+    DEBUG_LOG("plugin recv msg: %s", recv_buf);
+    return OK;
+}
+
+/**
+ * 说明：crpc客户端消息响应
+ * 返回：
+ * 备注：
+ */
 static int 
-crpc_cli_awaken(const int sk_fd)
+crpc_plugin_awaken(const int sk_fd)
 {
     list_node_t *iter = NULL;
-    crpc_cli_info_t *cli_info = NULL;
+    crpc_plugin_inst_t *plugin_inst = NULL;
 
-    for (iter = cli_list.head; NULL != iter; iter = iter->next) {
-        cli_info = CONTAINER_OF(iter, crpc_cli_info_t, list_node);
-        if (sk_fd == cli_info->sk_fd) {
+    for (iter = plugin_list.head; NULL != iter; iter = iter->next) {
+        plugin_inst = CONTAINER_OF(iter, crpc_plugin_inst_t, list_node);
+        if (sk_fd == plugin_inst->sk_fd) {
             DEBUG_LOG("client awaken.");
+            crpc_plugin_recv_msg(plugin_inst);
+            crpc_method_dispatch(plugin_inst);
             return OK;
         }
     }
@@ -148,7 +219,7 @@ crpc_epoll_run(void)
                 crpc_srv_awaken();
             } 
             else if (event_queue[i].data.fd > 0) {
-                crpc_cli_awaken(event_queue[i].data.fd);
+                crpc_plugin_awaken(event_queue[i].data.fd);
             } 
             else {
                 /* 待定*/
