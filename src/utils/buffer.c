@@ -93,7 +93,7 @@ buffer_clear(buffer_t *buf, size_t start, size_t length)
         buffer_flush(buf);
     } else if (buffer_used(buf) - start <= length) {
         /* buffer[(begin)   (start) (used)  (length)    (end)]*/
-        buffer_used(buf) = start;
+        buf->used = start;
         buffer_flush(buf);
     } else {
         /* buffer[(begin)   (start) (length)    (used)  (end)]*/
@@ -121,21 +121,21 @@ buffer_clear(buffer_t *buf, size_t start, size_t length)
  *      OK for success, ERROR-CODE for others.
  */
 int
-buffer_append(buffer_t *buf, const void *data_src, const size_t data_size)
+buffer_append(buffer_t **buf, const void *data_src, const size_t data_size)
 {
     uint8_t *data_dst = NULL;
     size_t free_size;
 
-    CHECK_2_NULL_RETURN_ERROR(buf, data_src, "input params buf || data == NULL.");
-    free_size = buffer_unused(buf);
+    CHECK_2_NULL_RETURN_ERROR(*buf, data_src, "input params buf || data == NULL.");
+    free_size = buffer_unused(*buf);
     if (free_size < data_size) {
         ERROR_LOG("the free size in buffer is not enough to accept source data.");
         return ERROR;
     }
 
-    data_dst = buffer_data(buf) + buffer_used(buf);
+    data_dst = buffer_data(*buf) + buffer_used(*buf);
     memcpy(data_dst, data_src, data_size);
-    buf->used += data_size;
+    (*buf)->used += data_size;
 
     return OK;
 }
@@ -173,6 +173,27 @@ buffer_data(buffer_t *buf)
     return &buf->data;
 }
 
+int64_t
+buffer_used(const buffer_t *buf)
+{
+    CHECK_NULL_RETURN_ERROR(buf, "cannot receive buf = NULL.");
 
+    return buf->used;
+}
 
+int64_t
+buffer_unused(const buffer_t *buf)
+{
+    CHECK_NULL_RETURN_ERROR(buf, "cannot receive buf = NULL.");
+
+    return buf->total - buf->used;
+}
+
+int64_t
+buffer_total(const buffer_t *buf)
+{
+    CHECK_NULL_RETURN_ERROR(buf, "cannot receive buf = NULL.");
+
+    return buf->total;
+}
 

@@ -1,17 +1,19 @@
 SOURCES_FILE = \
 			   /home/crpc/src/utils/buffer.c \
+			   /home/crpc/src/utils/list.c \
 			   /home/crpc/src/utils/log.c \
+			   /home/crpc/src/utils/hash.c \
 			   /home/crpc/src/utils/tlv.c \
 			   /home/crpc/src/utils/security.c \
-			   /home/crpc/src/crpc/crpc_cli.c
-
+			   /home/crpc/src/crpc/crpc_cli.c \
+			   /home/crpc/src/crpc/crpc_srv.c 
 
 
 INCLUDE_DIR = \
 			  -I/home/crpc/src/includes
 
-demo_cli0:
-	gcc -g -o $@ demo_cli0.c $(SOURCES_FILE) $(INCLUDE_DIR)
+daemon:
+	gcc -g -o $@ daemon.c $(SOURCES_FILE) $(INCLUDE_DIR)
 
 clean:
-	-rm demo_cli0 
+	-rm daemon

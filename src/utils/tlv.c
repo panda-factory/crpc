@@ -2,17 +2,63 @@
 
 #include "tlv.h"
 #include "define.h"
+#include "security.h"
 
 int
-tlv_init(tlv_t *tlv, const e_TLV_TYPE type, const uint32_t length, const void *value)
+tlv_init(tlv_t *tlv, const uint32_t type, const uint32_t length, const void *value)
 {
+    int ret = ERROR;
     CHECK_NULL_RETURN_ERROR(tlv, "cannot receive tlv=(null).");
 
     tlv->type = type;
     tlv->length = length;
-    memcpy(tlv_value(tlv), value, length);
+    if (NULL != value) {
+        ret = s_memcpy(tlv_value(tlv), length, value, length);
+        CHECK_ERROR_RETURN_ERROR(ret, "s_memcpy() failed.");
+    }
 
     return OK;
+}
+
+tlv_t *
+tlv_new(const uint32_t type, const uint32_t length, const void *value)
+{
+    int ret = ERROR;
+    uint32_t memory_size = 0;
+    tlv_t *tlv = NULL;
+
+    memory_size = sizeof(tlv_t) + length;
+
+    tlv = (tlv_t *)malloc(memory_size);
+    CHECK_NULL_RETURN_NULL(tlv, "malloc() failed.");
+
+    ret = tlv_init(tlv, type, length, value);
+    if (ERROR == ret) {
+        ERROR_LOG("tlv_init() failed.");
+        s_free(tlv);
+        return NULL;
+    }
+
+    return tlv;
+}
+
+int
+tlv_renew(tlv_t **tlv, const uint32_t type, const uint32_t length, const void *value)
+{
+    CHECK_NULL_RETURN_ERROR(*tlv, "cannot receive *tlv = NULL.");
+
+    tlv_free(tlv);
+    *tlv = tlv_new(type, length, value);
+
+    return OK;
+}
+
+extern void
+tlv_free(tlv_t **tlv)
+{
+    s_free(*tlv);
+
+    return;
 }
 
 uint32_t

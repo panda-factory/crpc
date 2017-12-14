@@ -1,0 +1,256 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ALERT_LOG	includes/log.h	75;"	d
+BUFFER_SIZE	executive/daemon.c	19;"	d	file:
+BUFFER_SIZE	includes/crpc_cli.h	10;"	d
+BUFFER_SIZE	includes/crpc_srv.h	8;"	d
+BUNDLES_NUM	executive/daemon.c	20;"	d	file:
+CHECK_2_NULL_RETURN_ERROR	includes/define.h	59;"	d
+CHECK_2_NULL_RETURN_NULL	includes/define.h	51;"	d
+CHECK_ERROR_EXIT	includes/define.h	83;"	d
+CHECK_ERROR_RETURN_ERROR	includes/define.h	75;"	d
+CHECK_ERROR_RETURN_NULL	includes/define.h	67;"	d
+CHECK_NULL_EXIT	includes/define.h	43;"	d
+CHECK_NULL_RETURN_ERROR	includes/define.h	35;"	d
+CHECK_NULL_RETURN_NULL	includes/define.h	27;"	d
+CHECK_NULL_RETURN_VOID	includes/define.h	19;"	d
+CHECK_NULL_RETURN_ZERO	includes/define.h	10;"	d
+CLIENT_NAME	includes/crpc_data.h	/^    CLIENT_NAME,$/;"	e	enum:_e_crpc_tlv
+CONTAINER_OF	includes/list.h	9;"	d
+CRIT_LOG	includes/log.h	80;"	d
+CRPC_EVENT_CLI	includes/crpc_data.h	12;"	d
+CRPC_EVENT_MASK	includes/crpc_data.h	9;"	d
+CRPC_EVENT_NONE	includes/crpc_data.h	10;"	d
+CRPC_EVENT_SRV	includes/crpc_data.h	11;"	d
+CRPC_INST_ID_MASK	includes/crpc_data.h	13;"	d
+CRPC_INST_ID_NONE	includes/crpc_data.h	14;"	d
+CRPC_MAGIC	includes/crpc_data.h	7;"	d
+CRPC_SK_FD_MASK	includes/crpc_data.h	8;"	d
+DAEMON_PID_FILE	executive/daemon.c	17;"	d	file:
+DEBUG_LOG	includes/log.h	105;"	d
+DEFAULT_LOG_LEVEL	executive/daemon.c	24;"	d	file:
+DESC	includes/define.h	7;"	d
+EMERG_LOG	includes/log.h	70;"	d
+ERROR	includes/error.h	5;"	d
+ERROR_LOG	includes/log.h	85;"	d
+HASH_KEY_EPOLL	executive/daemon.c	22;"	d	file:
+HASH_KEY_SRV	executive/daemon.c	23;"	d	file:
+HASH_NAME_CTX	executive/daemon.c	21;"	d	file:
+HASH_SEED	includes/hash.h	11;"	d
+INCLUDE_DIR	crpc/Makefile	/^INCLUDE_DIR = \\$/;"	m
+INCLUDE_DIR	demo/Makefile	/^INCLUDE_DIR = \\$/;"	m
+INCLUDE_DIR	executive/Makefile	/^INCLUDE_DIR = \\$/;"	m
+INFO_LOG	includes/log.h	100;"	d
+LIST_ENTRY	includes/list.h	12;"	d
+LL_TO_STR	includes/log.h	33;"	d
+LOG_IDENTIFIER	includes/log.h	10;"	d
+LOG_NONE	includes/log.h	11;"	d
+LOG_PROXY	includes/log.h	59;"	d
+METHOD_ACTIVATE	includes/crpc_data.h	/^    METHOD_ACTIVATE,$/;"	e	enum:_e_crpc_method
+METHOD_KICKOFF	includes/crpc_data.h	/^    METHOD_KICKOFF,$/;"	e	enum:_e_crpc_method
+METHOD_NONE	includes/crpc_data.h	/^    METHOD_NONE = 0,$/;"	e	enum:_e_crpc_method
+METHOD_REGISTER	includes/crpc_data.h	/^    METHOD_REGISTER,$/;"	e	enum:_e_crpc_method
+NONE	includes/crpc_data.h	/^    NONE = 0,$/;"	e	enum:_e_crpc_tlv
+NOTICE_LOG	includes/log.h	95;"	d
+OFFSET_OF	includes/list.h	8;"	d
+OK	includes/error.h	4;"	d
+SOCKET_HASH_KEY	executive/daemon.c	18;"	d	file:
+SOURCES_FILE	crpc/Makefile	/^SOURCES_FILE = \\$/;"	m
+SOURCES_FILE	demo/Makefile	/^SOURCES_FILE = \\$/;"	m
+SOURCES_FILE	executive/Makefile	/^SOURCES_FILE = \\$/;"	m
+STDERR_LOG	includes/log.h	53;"	d
+SYSLOG_LOG	includes/log.h	47;"	d
+TERMINATOR	includes/crpc_data.h	/^    TERMINATOR,$/;"	e	enum:_e_crpc_tlv
+TLV_CHECK_ERROR_RETURN_ERROR	includes/tlv.h	15;"	d
+TLV_CHECK_NULL_RETURN_ERROR	includes/tlv.h	6;"	d
+TLV_TYPE_HASH_KEY	includes/tlv.h	/^    TLV_TYPE_HASH_KEY,$/;"	e	enum:_e_TLV_TYPE
+TLV_TYPE_HASH_VALUE	includes/tlv.h	/^    TLV_TYPE_HASH_VALUE,$/;"	e	enum:_e_TLV_TYPE
+TLV_TYPE_NODE	includes/tlv.h	/^    TLV_TYPE_NODE,$/;"	e	enum:_e_TLV_TYPE
+T_NONE	includes/tlv.h	/^    T_NONE,$/;"	e	enum:_e_CRPC_TYPE
+T_PLUGIN_NAME	includes/tlv.h	/^    T_PLUGIN_NAME,$/;"	e	enum:_e_CRPC_TYPE
+T_TERMINATOR	includes/tlv.h	/^    T_TERMINATOR,$/;"	e	enum:_e_CRPC_TYPE
+UNIX_DOMAIN	demo/demo_cli0.c	11;"	d	file:
+UNIX_DOMAIN	includes/crpc_cli.h	9;"	d
+UNIX_DOMAIN	includes/crpc_srv.h	7;"	d
+WARNING_LOG	includes/log.h	90;"	d
+WORK_PATH	executive/daemon.c	16;"	d	file:
+_BUFFER_H	includes/buffer.h	2;"	d
+_CRPC_DATA_H_	includes/crpc_data.h	2;"	d
+_DEFINE_H	includes/define.h	2;"	d
+_ERROR_H_	includes/error.h	2;"	d
+_HASH_H_	includes/hash.h	2;"	d
+_LIST_H_	includes/list.h	2;"	d
+_LOG_H_	includes/log.h	2;"	d
+_TLV_H_	includes/tlv.h	2;"	d
+_XSTDLIB_H_	includes/security.h	2;"	d
+_buffer_t	includes/buffer.h	/^typedef struct _buffer_t {$/;"	s
+_crpc_cli_inst_t	includes/crpc_data.h	/^typedef struct _crpc_cli_inst_t$/;"	s
+_crpc_cli_t	includes/crpc_data.h	/^typedef struct _crpc_cli_t$/;"	s
+_crpc_method_t	includes/crpc_data.h	/^typedef struct _crpc_method_t$/;"	s
+_crpc_msg_head_t	includes/crpc_data.h	/^typedef struct _crpc_msg_head_t$/;"	s
+_crpc_srv_t	includes/crpc_data.h	/^typedef struct _crpc_srv_t$/;"	s
+_e_CRPC_TYPE	includes/tlv.h	/^typedef enum _e_CRPC_TYPE{$/;"	g
+_e_TLV_TYPE	includes/tlv.h	/^typedef enum _e_TLV_TYPE {$/;"	g
+_e_crpc_method	includes/crpc_data.h	/^typedef enum _e_crpc_method$/;"	g
+_e_crpc_tlv	includes/crpc_data.h	/^typedef enum _e_crpc_tlv$/;"	g
+_hash_bucket_t	includes/hash.h	/^typedef struct _hash_bucket_t {$/;"	s
+_hash_node_t	includes/hash.h	/^typedef struct _hash_node_t {$/;"	s
+_hash_table_t	includes/hash.h	/^typedef struct _hash_table_t {$/;"	s
+_list_node_t	includes/list.h	/^typedef struct _list_node_t {$/;"	s
+_list_table_t	includes/list.h	/^typedef struct _list_table_t {$/;"	s
+_tlv_t	includes/tlv.h	/^typedef struct _tlv_t {$/;"	s
+buckets	includes/hash.h	/^    hash_bucket_t   buckets[];    \/\/ head of bucker-array$/;"	m	struct:_hash_table_t
+buffer_append	utils/buffer.c	/^buffer_append(buffer_t **buf, const void *data_src, const size_t data_size)$/;"	f
+buffer_clear	utils/buffer.c	/^buffer_clear(buffer_t *buf, size_t start, size_t length)$/;"	f
+buffer_data	utils/buffer.c	/^buffer_data(buffer_t *buf)$/;"	f
+buffer_expand	utils/buffer.c	/^buffer_expand(buffer_t **buf, const size_t expand_size)$/;"	f
+buffer_flush	utils/buffer.c	/^buffer_flush(buffer_t *buf)$/;"	f
+buffer_free	utils/buffer.c	/^buffer_free(buffer_t *buf)$/;"	f
+buffer_new	utils/buffer.c	/^buffer_new(const size_t size)$/;"	f
+buffer_reset	utils/buffer.c	/^buffer_reset(buffer_t *buf)$/;"	f
+buffer_t	includes/buffer.h	/^} buffer_t;$/;"	t	typeref:struct:_buffer_t
+buffer_total	utils/buffer.c	/^buffer_total(const buffer_t *buf)$/;"	f
+buffer_unused	utils/buffer.c	/^buffer_unused(const buffer_t *buf)$/;"	f
+buffer_used	utils/buffer.c	/^buffer_used(const buffer_t *buf)$/;"	f
+count_inst	includes/crpc_data.h	/^    uint32_t    count_inst;$/;"	m	struct:_crpc_srv_t
+crpc_build_activate_msg	crpc/crpc_cli.c	/^crpc_build_activate_msg(crpc_cli_t *cli)$/;"	f	file:
+crpc_build_register_msg	crpc/crpc_cli.c	/^crpc_build_register_msg(crpc_cli_t *cli)$/;"	f	file:
+crpc_cli_awaken	crpc/crpc_srv.c	/^crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)$/;"	f	file:
+crpc_cli_fd_init	crpc/crpc_cli.c	/^crpc_cli_fd_init(crpc_cli_t *cli)$/;"	f	file:
+crpc_cli_free	crpc/crpc_cli.c	/^crpc_cli_free(crpc_cli_t **cli)$/;"	f
+crpc_cli_init	crpc/crpc_cli.c	/^crpc_cli_init(crpc_cli_t *cli, const char *name)$/;"	f
+crpc_cli_inst_new	crpc/crpc_srv.c	/^crpc_cli_inst_new()$/;"	f	file:
+crpc_cli_inst_t	includes/crpc_data.h	/^} crpc_cli_inst_t;$/;"	t	typeref:struct:_crpc_cli_inst_t
+crpc_cli_new	crpc/crpc_cli.c	/^crpc_cli_new()$/;"	f
+crpc_cli_recv_msg	crpc/crpc_cli.c	/^crpc_cli_recv_msg(crpc_cli_t *cli)$/;"	f	file:
+crpc_cli_recv_msg	crpc/crpc_srv.c	/^crpc_cli_recv_msg(crpc_cli_t *cli)$/;"	f	file:
+crpc_cli_run	crpc/crpc_cli.c	/^crpc_cli_run(crpc_cli_t *cli)$/;"	f
+crpc_cli_send_msg	crpc/crpc_cli.c	/^crpc_cli_send_msg(crpc_cli_t *cli)$/;"	f	file:
+crpc_cli_t	includes/crpc_data.h	/^} crpc_cli_t;$/;"	t	typeref:struct:_crpc_cli_t
+crpc_fill_activate_msg	crpc/crpc_cli.c	/^crpc_fill_activate_msg(crpc_cli_t *cli)$/;"	f	file:
+crpc_fill_msg_head	crpc/crpc_cli.c	/^crpc_fill_msg_head(buffer_t **buf, e_crpc_method method)$/;"	f	file:
+crpc_fill_register_msg	crpc/crpc_cli.c	/^crpc_fill_register_msg(crpc_cli_t *cli)$/;"	f	file:
+crpc_inst_recv_msg	crpc/crpc_srv.c	/^crpc_inst_recv_msg(crpc_cli_inst_t *inst)$/;"	f	file:
+crpc_method_activate	crpc/crpc_cli.c	/^crpc_method_activate(crpc_cli_t *cli)$/;"	f	file:
+crpc_method_activate	crpc/crpc_srv.c	/^crpc_method_activate(crpc_cli_inst_t *cli)$/;"	f	file:
+crpc_method_dispatch	crpc/crpc_cli.c	/^crpc_method_dispatch(crpc_cli_t *crpc_cli)$/;"	f	file:
+crpc_method_dispatch	crpc/crpc_srv.c	/^crpc_method_dispatch(crpc_cli_inst_t *cli)$/;"	f	file:
+crpc_method_parse	crpc/crpc_srv.c	/^crpc_method_parse(crpc_cli_inst_t *cli)$/;"	f	file:
+crpc_method_register	crpc/crpc_cli.c	/^crpc_method_register(crpc_cli_t *cli)$/;"	f	file:
+crpc_method_register	crpc/crpc_srv.c	/^crpc_method_register(crpc_cli_inst_t *cli)$/;"	f	file:
+crpc_method_t	includes/crpc_data.h	/^} crpc_method_t;$/;"	t	typeref:struct:_crpc_method_t
+crpc_msg_head_t	includes/crpc_data.h	/^} crpc_msg_head_t;$/;"	t	typeref:struct:_crpc_msg_head_t
+crpc_srv_awaken	crpc/crpc_srv.c	/^crpc_srv_awaken(crpc_srv_t *srv)$/;"	f	file:
+crpc_srv_ep_init	crpc/crpc_srv.c	/^crpc_srv_ep_init(crpc_srv_t *srv)$/;"	f	file:
+crpc_srv_ep_run	crpc/crpc_srv.c	/^crpc_srv_ep_run(crpc_srv_t *srv)$/;"	f	file:
+crpc_srv_fd_init	crpc/crpc_srv.c	/^crpc_srv_fd_init(crpc_srv_t *srv)$/;"	f	file:
+crpc_srv_free	crpc/crpc_srv.c	/^crpc_srv_free(crpc_srv_t **srv)$/;"	f
+crpc_srv_init	crpc/crpc_srv.c	/^crpc_srv_init(crpc_srv_t *srv, const char *name)$/;"	f
+crpc_srv_new	crpc/crpc_srv.c	/^crpc_srv_new()$/;"	f
+crpc_srv_run	crpc/crpc_srv.c	/^crpc_srv_run(crpc_srv_t *srv)$/;"	f
+crpc_srv_t	includes/crpc_data.h	/^} crpc_srv_t;$/;"	t	typeref:struct:_crpc_srv_t
+daemon_check_single_instance	executive/daemon.c	/^daemon_check_single_instance()$/;"	f	file:
+daemon_run	executive/daemon.c	/^daemon_run()$/;"	f	file:
+data	includes/buffer.h	/^    uint8_t     data;$/;"	m	struct:_buffer_t
+e_CRPC_TYPE	includes/tlv.h	/^} e_CRPC_TYPE;$/;"	t	typeref:enum:_e_CRPC_TYPE
+e_TLV_TYPE	includes/tlv.h	/^} e_TLV_TYPE;$/;"	t	typeref:enum:_e_TLV_TYPE
+e_crpc_method	includes/crpc_data.h	/^} e_crpc_method;$/;"	t	typeref:enum:_e_crpc_method
+e_crpc_tlv	includes/crpc_data.h	/^} e_crpc_tlv;$/;"	t	typeref:enum:_e_crpc_tlv
+ep_fd	includes/crpc_data.h	/^    int ep_fd;$/;"	m	struct:_crpc_srv_t
+flag_activate	includes/crpc_data.h	/^    bool        flag_activate;$/;"	m	struct:_crpc_cli_inst_t
+flag_activate	includes/crpc_data.h	/^    bool flag_activate;$/;"	m	struct:_crpc_cli_t
+flag_register	includes/crpc_data.h	/^    bool        flag_register;$/;"	m	struct:_crpc_cli_inst_t
+flag_register	includes/crpc_data.h	/^    bool flag_register;$/;"	m	struct:_crpc_cli_t
+free_func_t	includes/list.h	/^typedef void (*free_func_t)(void *ptr);$/;"	t
+func	includes/crpc_data.h	/^    int (*func)(void *, ...);$/;"	m	struct:_crpc_method_t
+g_ctx_ht	executive/daemon.c	/^hash_table_t *g_ctx_ht;$/;"	v
+g_hash_func	utils/hash.c	/^hash_func_t g_hash_func = jenkins_hash_func;$/;"	v
+hash_add	utils/hash.c	/^hash_add(hash_table_t *table, const char *key, const void *val, const uint32_t val_len)$/;"	f
+hash_bucket_t	includes/hash.h	/^} hash_bucket_t;$/;"	t	typeref:struct:_hash_bucket_t
+hash_func_t	includes/hash.h	/^typedef uint32_t (*hash_func_t)(const char *key, const uint16_t key_len);$/;"	t
+hash_get	utils/hash.c	/^hash_get(const hash_table_t *table, const char *key)$/;"	f
+hash_keyval	utils/hash.c	/^hash_keyval(const hash_node_t *ptr)$/;"	f
+hash_lookup	utils/hash.c	/^hash_lookup(const hash_table_t *hash_table, const char *hash_key)$/;"	f
+hash_new	utils/hash.c	/^hash_new(const char *name, uint32_t num_buckets)$/;"	f
+hash_new_node	utils/hash.c	/^hash_new_node(hash_table_t *table, const char *key, const void *val, const uint32_t val_len)$/;"	f	file:
+hash_node_t	includes/hash.h	/^} hash_node_t;$/;"	t	typeref:struct:_hash_node_t
+hash_table_t	includes/hash.h	/^} hash_table_t;$/;"	t	typeref:struct:_hash_table_t
+head	includes/list.h	/^    list_node_t *head;$/;"	m	struct:_list_table_t
+id	includes/crpc_data.h	/^    uint32_t    id;$/;"	m	struct:_crpc_cli_inst_t
+inst_list	includes/crpc_data.h	/^    list_table_t    inst_list;$/;"	m	struct:_crpc_srv_t
+jenkins_hash_func	utils/hash.c	/^jenkins_hash_func(const char *key, uint16_t key_len)$/;"	f	file:
+jenkins_hash_mix	utils/hash.c	/^jenkins_hash_mix(uint32_t *hash_x, uint32_t *hash_y, uint32_t *hash_val)$/;"	f	file:
+keyval	includes/hash.h	/^    tlv_t         keyval[];  \/\/ contain two tlv items (tlv-key + tlv-val)$/;"	m	struct:_hash_node_t
+length	includes/crpc_data.h	/^    uint32_t        length;$/;"	m	struct:_crpc_msg_head_t
+length	includes/hash.h	/^    uint32_t      length;    \/\/ memory size for key_val$/;"	m	struct:_hash_node_t
+length	includes/tlv.h	/^    uint32_t length;$/;"	m	struct:_tlv_t
+list	includes/hash.h	/^    list_table_t    list;$/;"	m	struct:_hash_bucket_t
+list_append	utils/list.c	/^list_append(list_table_t *table, list_node_t *node)$/;"	f
+list_free	utils/list.c	/^list_free(list_table_t *table, free_func_t free_func)$/;"	f
+list_insert	utils/list.c	/^list_insert(list_node_t *node_dst, list_node_t *node_src)$/;"	f
+list_new	utils/list.c	/^list_new()$/;"	f
+list_node	includes/crpc_data.h	/^    list_node_t list_node;$/;"	m	struct:_crpc_cli_inst_t
+list_node	includes/crpc_data.h	/^    list_node_t list_node;$/;"	m	struct:_crpc_cli_t
+list_node	includes/hash.h	/^    list_node_t   list_node; \/\/ list for hash-bucket reference, and handle conflict.$/;"	m	struct:_hash_node_t
+list_node_t	includes/list.h	/^} list_node_t;$/;"	t	typeref:struct:_list_node_t
+list_remove	utils/list.c	/^list_remove(list_node_t *node)$/;"	f
+list_table_t	includes/list.h	/^} list_table_t;$/;"	t	typeref:struct:_list_table_t
+log_init	utils/log.c	/^log_init(bool flag_daemon, int8_t level)$/;"	f
+log_stderr	utils/log.c	/^log_stderr(const char *fmt, ...)$/;"	f
+log_syslog	includes/log.h	12;"	d
+long_options	executive/daemon.c	/^static struct option const long_options[] = {$/;"	v	file:
+magic	includes/crpc_data.h	/^    uint32_t        magic;$/;"	m	struct:_crpc_msg_head_t
+main	demo/demo_cli0.c	/^int main(int argc, char **argv)$/;"	f
+main	executive/daemon.c	/^int main(int argc, char **argv)$/;"	f
+method	includes/crpc_data.h	/^    crpc_method_t *method;$/;"	m	struct:_crpc_cli_inst_t
+method	includes/crpc_data.h	/^    crpc_method_t *method;$/;"	m	struct:_crpc_cli_t
+method	includes/crpc_data.h	/^    e_crpc_method   method;$/;"	m	struct:_crpc_msg_head_t
+method_register	includes/crpc_data.h	/^    int (*method_register)(struct _crpc_cli_t *crpc_cli);$/;"	m	struct:_crpc_cli_inst_t
+method_register	includes/crpc_data.h	/^    int (*method_register)(struct _crpc_cli_t *crpc_cli);$/;"	m	struct:_crpc_cli_t
+name	includes/crpc_data.h	/^    char        *name;$/;"	m	struct:_crpc_cli_inst_t
+name	includes/crpc_data.h	/^    char *name;$/;"	m	struct:_crpc_cli_t
+name	includes/crpc_data.h	/^    char *name;$/;"	m	struct:_crpc_srv_t
+name	includes/crpc_data.h	/^    e_crpc_method name;$/;"	m	struct:_crpc_method_t
+name	includes/hash.h	/^    char            *name;$/;"	m	struct:_hash_table_t
+next	includes/list.h	/^    struct _list_node_t* next;$/;"	m	struct:_list_node_t	typeref:struct:_list_node_t::_list_node_t
+num	includes/hash.h	/^    uint32_t        num;$/;"	m	struct:_hash_bucket_t
+num_buckets	includes/hash.h	/^    uint32_t        num_buckets;  \/\/ buckets number$/;"	m	struct:_hash_table_t
+num_datas	includes/hash.h	/^    uint32_t        num_datas;$/;"	m	struct:_hash_table_t
+precv_buf	includes/crpc_data.h	/^    uint8_t     *precv_buf;$/;"	m	struct:_crpc_cli_inst_t
+prev	includes/list.h	/^    struct _list_node_t *prev;$/;"	m	struct:_list_node_t	typeref:struct:_list_node_t::_list_node_t
+print_help	executive/daemon.c	/^print_help()$/;"	f	file:
+psend_buf	includes/crpc_data.h	/^    uint8_t     *psend_buf;$/;"	m	struct:_crpc_cli_inst_t
+recv_buf	includes/crpc_data.h	/^    buffer_t    *recv_buf;$/;"	m	struct:_crpc_cli_inst_t
+recv_buf	includes/crpc_data.h	/^    buffer_t *recv_buf;$/;"	m	struct:_crpc_cli_t
+s_free	includes/security.h	6;"	d
+s_memcpy	utils/security.c	/^s_memcpy(void *dst, const size_t max_dst, const void *src, const size_t count)$/;"	f
+s_memset	utils/security.c	/^s_memset(void *dst, size_t max_dst, int ch, size_t count)$/;"	f
+send_buf	includes/crpc_data.h	/^    buffer_t    *send_buf;$/;"	m	struct:_crpc_cli_inst_t
+send_buf	includes/crpc_data.h	/^    buffer_t *send_buf;$/;"	m	struct:_crpc_cli_t
+set_stderr_log	utils/log.c	/^set_stderr_log(const int8_t level)$/;"	f	file:
+set_syslog_log	utils/log.c	/^set_syslog_log(const int8_t level)$/;"	f	file:
+short_options	executive/daemon.c	/^static char const short_options[] = $/;"	v	file:
+sk_fd	includes/crpc_data.h	/^    int         sk_fd;$/;"	m	struct:_crpc_cli_inst_t
+sk_fd	includes/crpc_data.h	/^    int sk_fd;$/;"	m	struct:_crpc_cli_t
+sk_fd	includes/crpc_data.h	/^    int sk_fd;$/;"	m	struct:_crpc_srv_t
+stderr_level	utils/log.c	/^int8_t stderr_level = LOG_DEBUG;$/;"	v
+syslog_level	utils/log.c	/^int8_t syslog_level = LOG_NONE;$/;"	v
+table	includes/hash.h	/^    hash_table_t  *table;    \/\/ which hash-table is hash-node belong to$/;"	m	struct:_hash_node_t
+tail	includes/list.h	/^    list_node_t *tail;$/;"	m	struct:_list_table_t
+tlv_free	utils/tlv.c	/^tlv_free(tlv_t **tlv)$/;"	f
+tlv_init	utils/tlv.c	/^tlv_init(tlv_t *tlv, const uint32_t type, const uint32_t length, const void *value)$/;"	f
+tlv_length	utils/tlv.c	/^tlv_length(tlv_t *tlv)$/;"	f
+tlv_new	utils/tlv.c	/^tlv_new(const uint32_t type, const uint32_t length, const void *value)$/;"	f
+tlv_next	utils/tlv.c	/^tlv_next(tlv_t *tlv)$/;"	f
+tlv_renew	utils/tlv.c	/^tlv_renew(tlv_t **tlv, const uint32_t type, const uint32_t length, const void *value)$/;"	f
+tlv_t	includes/tlv.h	/^} tlv_t;$/;"	t	typeref:struct:_tlv_t
+tlv_type	utils/tlv.c	/^tlv_type(tlv_t *tlv)$/;"	f
+tlv_value	utils/tlv.c	/^tlv_value(tlv_t *tlv)$/;"	f
+total	includes/buffer.h	/^    size_t    total;$/;"	m	struct:_buffer_t
+type	includes/tlv.h	/^    uint32_t type;$/;"	m	struct:_tlv_t
+used	includes/buffer.h	/^    size_t    used;$/;"	m	struct:_buffer_t
+value	includes/tlv.h	/^    uint8_t value[];$/;"	m	struct:_tlv_t

@@ -1,7 +1,12 @@
 AUTOMAKE_OPTIONS=foreign
 
-util_LTLIBRARIES=libutil.la
-libutil_la_SOURCES = $(tpo_srcdir)/src/utilx/panda_log.c
+lib_LTLIBRARIES=libutil.la
+libutil_la_SOURCES = log.c \
+					 buffer.c \
+					 hash.c \
+					 list.c \
+					 security.c \
+					 tlv.c
 					
 
-INCLUDES = -I$(top_srcdir)/src/include
+INCLUDES=-I$(top_srcdir)/../include
