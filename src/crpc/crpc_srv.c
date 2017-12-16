@@ -267,7 +267,7 @@ crpc_srv_fd_init(crpc_srv_t *srv)
     CHECK_ERROR_RETURN_ERROR(srv->sk_fd, "can not create server socket.");
 
     listen_addr.sun_family = AF_UNIX;
-    strncpy(listen_addr.sun_path, UNIX_DOMAIN, sizeof(listen_addr.sun_path) + 1);
+    strncpy(listen_addr.sun_path, UNIX_DOMAIN, sizeof(listen_addr.sun_path) - 1);
     unlink(UNIX_DOMAIN);
 
     ret = bind(srv->sk_fd, (struct sockaddr *)&listen_addr, sizeof(listen_addr));

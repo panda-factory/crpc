@@ -3,14 +3,18 @@ AUTOMAKE_OPTIONS = foreign subdir-objects
 bin_PROGRAMS = daemon
 
 daemon_SOURCES = \
-				 $(top_srcdir)/src/executive/daemon.c 
+				 $(top_srcdir)/src/executive/daemon.c
 
 
 daemon_LDADD = \
-				-lutil \
-				$(top_srcdir)/src/crpc/libcrpc.a
+			   $(top_srcdir)/src/crpc/libcrpc.a \
+			   -lutils
 
 INCLUDES = -I$(top_srcdir)/include
+
+SUBDIRS = \
+		  src/utils \
+		  src/crpc
 
 #可执行文件
 #bin_PROGRAMS=xxx

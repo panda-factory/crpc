@@ -1,10 +1,9 @@
-AUTOMAKE_OPTIONS = foreign
+AUTOMAKE_OPTIONS = foreign subdir-objects
 
-noinst_LIBRARIES = libcrpc.a
+noinst_LIBRARIES=libcrpc.a
 
-libcrpc_a_SOURCES = \
-					crpc_cli.c \
-					crpc_srv.c
+libcrpc_a_SOURCES=crpc_cli.c \
+				  crpc_srv.c 
 
 INCLUDES = \
 		   -I$(top_srcdir)/include
