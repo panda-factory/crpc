@@ -10,7 +10,7 @@ daemon_SOURCES = \
 
 daemon_LDADD = \
 			   $(top_srcdir)/src/crpc/libcrpc.a \
-			   -lutils
+			   $(top_srcdir)/src/utils/libutils.la
 
 INCLUDES = \
 		   -I$(top_srcdir)/include
