@@ -1,5 +1,7 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
+ACLOCAL_AMFLAGS=-I m4
+
 bin_PROGRAMS = daemon
 
 daemon_SOURCES = \
@@ -10,7 +12,8 @@ daemon_LDADD = \
 			   $(top_srcdir)/src/crpc/libcrpc.a \
 			   -lutils
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = \
+		   -I$(top_srcdir)/include
 
 SUBDIRS = \
 		  src/utils \

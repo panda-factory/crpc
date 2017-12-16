@@ -12,7 +12,8 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_RANLIB
+LT_INIT
+#AC_PROG_RANLIB
 
 # Checks for libraries.
 
@@ -36,6 +37,7 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memmove memset socket strdup])
 
 AC_PROG_LIBTOOL
+AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_FILES([Makefile
                  src/crpc/Makefile
                  src/utils/Makefile])
