@@ -83,7 +83,7 @@ daemon_check_single_instance()
     }
 
     /*3、进程ID写入PID文件.*/
-    ret = snprintf(str_pid, BUFFER_SIZE, "%d\n", getpid());
+    ret = snprintf(str_pid, 128, "%d\n", getpid());
     str_pid[ret] = '\0';
     ret = write(pid_file_fd, str_pid, strlen(str_pid));
     CHECK_ERROR_EXIT(ret, "Unable to write into sysrepo PID file: [%s].", DAEMON_PID_FILE);
@@ -114,7 +114,11 @@ daemon_run()
     
     INFO_LOG("daemon is runing");
     /*3.改变工作目录路径*/
-    chdir(WORK_PATH);
+    ret = chdir(WORK_PATH);
+    if (ERROR == ret) {
+        ERROR_LOG("change directory failed.");
+        return;
+    }
     
     /*4.关闭残留文件描述符*/
     close(STDIN_FILENO);
@@ -158,7 +162,11 @@ int main(int argc, char **argv)
 
     log_init(flag_daemon, log_level);
     crpc_srv = crpc_srv_new();
-    crpc_srv_init(crpc_srv, "test");
+    ret = crpc_srv_init(crpc_srv, "test");
+    if (ERROR == ret) {
+        ERROR_LOG("Initiate crpc server failed.");
+        exit(1);
+    }
 
     crpc_srv_run(crpc_srv);
 

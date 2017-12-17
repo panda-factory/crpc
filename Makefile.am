@@ -2,22 +2,22 @@ AUTOMAKE_OPTIONS = foreign subdir-objects
 
 ACLOCAL_AMFLAGS=-I m4
 
-bin_PROGRAMS = daemon
+noinst_PROGRAMS = crpcd
 
-daemon_SOURCES = \
+crpcd_SOURCES = \
 				 $(top_srcdir)/src/executive/daemon.c
 
 
-daemon_LDADD = \
-			   $(top_srcdir)/src/crpc/libcrpc.a \
-			   $(top_srcdir)/src/utils/libutils.la
+crpcd_LDADD = \
+			   $(top_srcdir)/src/crpc/libcrpc.la 
+			   $(top_srcdir)/src/utils/libutils.la 
 
 INCLUDES = \
 		   -I$(top_srcdir)/include
 
 SUBDIRS = \
-		  src/utils \
-		  src/crpc
+		  src/crpc \
+		  src/demo
 
 #可执行文件
 #bin_PROGRAMS=xxx

@@ -1,9 +1,15 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
-noinst_LIBRARIES=libcrpc.a
+lib_LTLIBRARIES = libcrpc.la
 
-libcrpc_a_SOURCES=crpc_cli.c \
-				  crpc_srv.c 
+SUBDIRS = ../utils
+
+libcrpc_la_SOURCES = \
+					 crpc_cli.c \
+					 crpc_srv.c 
+
+libcrpc_la_LIBADD = \
+				   $(top_srcdir)/src/utils/libutils.la
 
 INCLUDES = \
 		   -I$(top_srcdir)/include

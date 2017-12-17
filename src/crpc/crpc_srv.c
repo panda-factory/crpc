@@ -194,9 +194,8 @@ crpc_srv_awaken(crpc_srv_t *srv)
     list_append(&srv->inst_list, &cli->list_node);
 
     /* epoll注册服务器监听socket*/
-    event_register.data.u64 = cli->sk_fd & CRPC_SK_FD_MASK;
-    event_register.data.u64 = CRPC_EVENT_CLI & CRPC_EVENT_MASK;
-    event_register.data.u64 = (cli->id << 32) & CRPC_INST_ID_MASK;
+    event_register.data.u32 = CRPC_EVENT_CLI & CRPC_EVENT_MASK;
+    event_register.data.u32 = cli->id & CRPC_INST_ID_MASK;
     event_register.events = EPOLLIN | EPOLLET;
     epoll_ctl(srv->ep_fd, EPOLL_CTL_ADD, cli->sk_fd, &event_register);
     DEBUG_LOG("server accept client.");
@@ -210,7 +209,7 @@ crpc_srv_awaken(crpc_srv_t *srv)
  * 备注：
  */
 static int
-crpc_cli_recv_msg(crpc_cli_t *cli)
+crpc_cli_recv_msg(crpc_cli_inst_t *cli)
 {
     int ret = ERROR;
     uint8_t recv_buf[BUFFER_SIZE] = {0};
@@ -301,8 +300,7 @@ crpc_srv_ep_init(crpc_srv_t *srv)
     CHECK_ERROR_RETURN_ERROR(srv->ep_fd, "epoll_create failed.");
 
     /* epoll注册服务器监听socket*/
-    event_register.data.u64 = srv->sk_fd & CRPC_SK_FD_MASK;
-    event_register.data.u64 = CRPC_EVENT_SRV & CRPC_EVENT_MASK;
+    event_register.data.u32 = CRPC_EVENT_SRV & CRPC_EVENT_MASK;
     event_register.events = EPOLLIN | EPOLLET;
     epoll_ctl(srv->ep_fd, EPOLL_CTL_ADD, srv->sk_fd, &event_register);
 
@@ -315,27 +313,27 @@ crpc_srv_ep_run(crpc_srv_t *srv)
     int ret = ERROR;
     int i = 0;
     int event_num = 0;
-    uint16_t event_type = CRPC_EVENT_NONE >> 48;
-    uint16_t cli_id = CRPC_INST_ID_NONE >> 32;
+    uint32_t event_type = CRPC_EVENT_NONE;
+    uint32_t cli_id = CRPC_INST_ID_NONE;
     struct epoll_event event_queue[20];
 
     for (;;) {
         event_num = epoll_wait(srv->ep_fd, event_queue, 20, 500);
         for (i = 0; i < event_num; i++) {
-            event_type = (event_queue[i].data.u64 & CRPC_EVENT_MASK) >> 48;
+            event_type = event_queue[i].data.u32 & CRPC_EVENT_MASK;
 
             if (CRPC_EVENT_SRV == event_type) {
                 crpc_srv_awaken(srv);
             } 
             else if (CRPC_EVENT_CLI == event_type) {
-                cli_id = (event_queue[i].data.u64 & CRPC_INST_ID_MASK) >> 32;
+                cli_id = event_queue[i].data.u32 & CRPC_INST_ID_MASK;
                 crpc_cli_awaken(srv, cli_id);
-                cli_id = CRPC_INST_ID_NONE >> 32;
+                cli_id = CRPC_INST_ID_NONE;
             } 
             else {
                 /* 待定*/
             }
-            event_type = CRPC_EVENT_NONE >> 48;
+            event_type = CRPC_EVENT_NONE;
         }
 
     }

@@ -10,7 +10,7 @@ typedef struct _buffer_t {
 } buffer_t;
 
 buffer_t *
-buffer_new(const size_t size);
+buffer_new(const size_t size)__attribute__ ((warn_unused_result));
 
 extern void
 buffer_free(buffer_t *buf);

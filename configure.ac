@@ -37,8 +37,9 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memmove memset socket strdup])
 
 AC_PROG_LIBTOOL
-AC_CONFIG_MACRO_DIRS([m4])
+#AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_FILES([Makefile
                  src/crpc/Makefile
-                 src/utils/Makefile])
+                 src/utils/Makefile
+                 src/demo/Makefile])
 AC_OUTPUT
