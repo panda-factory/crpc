@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 typedef struct _buffer_t {
-    size_t    total;
-    size_t    used;
+    uint32_t    total;
+    uint32_t    used;
     uint8_t     data;
 } buffer_t;
 
@@ -30,16 +30,16 @@ buffer_expand(buffer_t **buf, const size_t expand_size);
 extern int
 buffer_reset(buffer_t *buf);
 
-extern uint8_t *
+extern void *
 buffer_data(buffer_t *buf);
 
-extern int64_t
+extern uint32_t
 buffer_used(const buffer_t *buf);
 
-extern int64_t
+extern uint32_t
 buffer_unused(const buffer_t *buf);
 
-extern int64_t
+extern uint32_t
 buffer_total(const buffer_t *buf);
 
 #endif //_BUFFER_H

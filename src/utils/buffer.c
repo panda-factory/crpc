@@ -165,7 +165,7 @@ buffer_reset(buffer_t *buf)
     return OK;
 }
 
-uint8_t *
+void *
 buffer_data(buffer_t *buf)
 {
     CHECK_NULL_RETURN_NULL(buf, "input params buf == NULL.");
@@ -173,7 +173,7 @@ buffer_data(buffer_t *buf)
     return &buf->data;
 }
 
-int64_t
+uint32_t
 buffer_used(const buffer_t *buf)
 {
     CHECK_NULL_RETURN_ERROR(buf, "cannot receive buf = NULL.");
@@ -181,7 +181,7 @@ buffer_used(const buffer_t *buf)
     return buf->used;
 }
 
-int64_t
+uint32_t
 buffer_unused(const buffer_t *buf)
 {
     CHECK_NULL_RETURN_ERROR(buf, "cannot receive buf = NULL.");
@@ -189,7 +189,7 @@ buffer_unused(const buffer_t *buf)
     return buf->total - buf->used;
 }
 
-int64_t
+uint32_t
 buffer_total(const buffer_t *buf)
 {
     CHECK_NULL_RETURN_ERROR(buf, "cannot receive buf = NULL.");

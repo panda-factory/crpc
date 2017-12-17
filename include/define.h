@@ -89,5 +89,20 @@
     } while (0);
 #endif //错误检查
 
+#define CHECK_OK_RETURN_RET(ret, fmt, ...) \
+    do { \
+        if (OK != ret) { \
+            ERROR_LOG(fmt, ##__VA_ARGS__); \
+            return ret; \
+        } \
+    } while (0)
+
+#define CHECK_OK_RETURN_NULL(ret, fmt, ...) \
+    do { \
+        if (OK != ret) { \
+            ERROR_LOG(fmt, ##__VA_ARGS__); \
+            return NULL; \
+        } \
+    } while (0)
 
 #endif //DEFINE_H

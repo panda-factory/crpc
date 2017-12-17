@@ -19,6 +19,8 @@ SUBDIRS = \
 		  src/crpc \
 		  src/demo
 
+#AM_CFLAGS = -fdiagnostics-color=auto
+
 #可执行文件
 #bin_PROGRAMS=xxx
 #xxx_SOURCES=xxx.c

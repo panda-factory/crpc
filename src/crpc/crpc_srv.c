@@ -27,18 +27,21 @@ static crpc_cli_inst_t *
 crpc_cli_inst_new()
 {
     int ret = ERROR;
-    crpc_cli_inst_t *cli_inst = NULL;
+    crpc_cli_inst_t *cli = NULL;
 
-    cli_inst = (crpc_cli_inst_t *)malloc(sizeof(crpc_cli_inst_t));
-    CHECK_NULL_RETURN_NULL(cli_inst, "malloc failed.");
-    ret = s_memset(cli_inst, sizeof(crpc_cli_inst_t), 0, sizeof(crpc_cli_inst_t));
-    if (ERROR == ret) {
-        ERROR_LOG("s_memset() failed.");
-        s_free(cli_inst);
-        return NULL;
-    }
+    cli = (crpc_cli_inst_t *)malloc(sizeof(crpc_cli_inst_t));
+    CHECK_NULL_RETURN_NULL(cli, "malloc failed.");
+    
+    ret = s_memset(cli, sizeof(crpc_cli_inst_t), 0, sizeof(crpc_cli_inst_t));
+    CHECK_OK_RETURN_NULL(ret, "s_memset() failed.");
 
-    return cli_inst;
+    cli->recv_buf = buffer_new(BUFFER_SIZE);
+    CHECK_NULL_RETURN_NULL(cli->recv_buf, "buffer new for receive buffer of client instance failed.");
+
+    cli->send_buf = buffer_new(BUFFER_SIZE);
+    CHECK_NULL_RETURN_NULL(cli->send_buf, "buffer new for send buffer of client instance failed.");
+
+    return cli;
 }
 
 /**
@@ -57,7 +60,7 @@ crpc_method_register(crpc_cli_inst_t *cli)
 
     crpc_data = buffer_data(cli->recv_buf) + sizeof(crpc_msg_head_t);
 
-    for (iter = (tlv_t *)crpc_data; T_TERMINATOR != iter->type; iter = tlv_next((tlv_t *)iter)) {
+    for (iter = (tlv_t *)crpc_data; TERMINATOR != iter->type; iter = tlv_next((tlv_t *)iter)) {
         if (T_PLUGIN_NAME == iter->type) {
             cli->name = strdup(iter->value);
             CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed when register plugin name.");
@@ -104,8 +107,18 @@ crpc_method_parse(crpc_cli_inst_t *cli)
     }
 
     head = (crpc_msg_head_t *)buffer_data(cli->recv_buf);
+    if (NULL == head) {
+        ERROR_LOG("get message buffer from cli->recv_buf failed.");
+        return METHOD_NONE;
+    }
+
+    if (CRPC_MAGIC != head->magic) {
+        WARNING_LOG("this message is not for crpc.");
+        return METHOD_NONE;
+    }
     method = head->method;
 
+    DEBUG_LOG("crpc method: [%d]", method);
     return method;
 }
 
@@ -121,6 +134,10 @@ crpc_method_dispatch(crpc_cli_inst_t *cli)
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL.");
 
     method = crpc_method_parse(cli);
+    if (METHOD_NONE == method) {
+        ERROR_LOG("crpc method code failed.");
+        return OK;
+    }
 
     switch(method) {
         case METHOD_REGISTER:
@@ -195,7 +212,7 @@ crpc_srv_awaken(crpc_srv_t *srv)
 
     /* epoll注册服务器监听socket*/
     event_register.data.u32 = CRPC_EVENT_CLI & CRPC_EVENT_MASK;
-    event_register.data.u32 = cli->id & CRPC_INST_ID_MASK;
+    event_register.data.u32 |= cli->id & CRPC_INST_ID_MASK;
     event_register.events = EPOLLIN | EPOLLET;
     epoll_ctl(srv->ep_fd, EPOLL_CTL_ADD, cli->sk_fd, &event_register);
     DEBUG_LOG("server accept client.");
@@ -213,17 +230,17 @@ crpc_cli_recv_msg(crpc_cli_inst_t *cli)
 {
     int ret = ERROR;
     uint8_t recv_buf[BUFFER_SIZE] = {0};
-    int64_t recv_length = ERROR;
+    int32_t recv_length = ERROR;
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
-    do {
-        recv_length = read(cli->sk_fd, recv_buf, BUFFER_SIZE);
-        CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
+    recv_length = read(cli->sk_fd, recv_buf, BUFFER_SIZE);
+    CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
 
-        ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
-    } while (0 != recv_length);
+    ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
+    CHECK_OK_RETURN_RET(ret, "append receive buffer to client instance recv_buf failed.");
 
+    DEBUG_LOG("reveive message from client: [%dB].", recv_length);
     return OK;
 }
 
@@ -235,6 +252,7 @@ crpc_cli_recv_msg(crpc_cli_inst_t *cli)
 static int 
 crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
 {
+    int ret = ERROR;
     list_node_t *iter = NULL;
     crpc_cli_inst_t *cli = NULL;
 
@@ -242,8 +260,12 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
         cli = CONTAINER_OF(iter, crpc_cli_inst_t, list_node);
         if (cli_id == cli->id) {
             DEBUG_LOG("client awaken.");
-            crpc_cli_recv_msg(cli);
-            crpc_method_dispatch(cli);
+            ret = crpc_cli_recv_msg(cli);
+            CHECK_OK_RETURN_RET(ret, "receive message failed.");
+            
+            ret = crpc_method_dispatch(cli);
+            CHECK_OK_RETURN_RET(ret, "crpc method dispatch failed.");
+            
             return OK;
         }
     }
@@ -332,6 +354,7 @@ crpc_srv_ep_run(crpc_srv_t *srv)
             } 
             else {
                 /* 待定*/
+                WARNING_LOG("unknow event type!");
             }
             event_type = CRPC_EVENT_NONE;
         }

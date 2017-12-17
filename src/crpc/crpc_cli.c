@@ -30,12 +30,13 @@ crpc_cli_send_msg(crpc_cli_t *cli)
     int ret = ERROR;
     void *send_buf = NULL;
     uint32_t send_length = 0;
-    int64_t sent_length = ERROR;
+    int32_t sent_length = ERROR;
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
-    send_buf = cli->send_buf;
-    send_length = buffer_used((buffer_t *)send_buf);
+    send_buf = buffer_data(cli->send_buf);
+    send_length = buffer_used(cli->send_buf);
+    DEBUG_LOG("client send buffer has [%d]B message to be sent.", send_length);
 
     sent_length = write(cli->sk_fd, send_buf, send_length);
     CHECK_ERROR_RETURN_ERROR(sent_length, "write() to socket failed.");
@@ -43,6 +44,7 @@ crpc_cli_send_msg(crpc_cli_t *cli)
     ret = buffer_flush(cli->send_buf);
     CHECK_ERROR_RETURN_ERROR(ret, "buffer_flush() failed.");
 
+    DEBUG_LOG("client send message to server: [%d]B.", sent_length);
     return OK;
 }
 
@@ -94,6 +96,7 @@ crpc_fill_register_msg(crpc_cli_t *cli)
     ret = buffer_append(&cli->send_buf, tlv, sizeof(tlv_t) + tlv_length(tlv));
     TLV_CHECK_ERROR_RETURN_ERROR(ret, "buffer_apppend() failed.");
 
+    tlv_free(&tlv);
     return OK;
 }
 
@@ -160,6 +163,7 @@ crpc_build_register_msg(crpc_cli_t *cli)
     msg_head = (crpc_msg_head_t *)buffer_data(cli->send_buf);
     msg_head->length = buffer_used(cli->send_buf) - sizeof(crpc_msg_head_t);
 
+    DEBUG_LOG("build register message success: [%d]B.", buffer_used(cli->send_buf));
     return OK;
 }
 
@@ -320,7 +324,7 @@ crpc_cli_init(crpc_cli_t *cli, const char *name)
 
     CHECK_2_NULL_RETURN_ERROR(cli, name, "input params cannot be NULL.");
 
-    cli->name = strdup("name");
+    cli->name = strdup(name);
     CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed.");
 
     ret = crpc_cli_fd_init(cli);
