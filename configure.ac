@@ -41,5 +41,6 @@ AC_PROG_LIBTOOL
 AC_CONFIG_FILES([Makefile
                  src/crpc/Makefile
                  src/utils/Makefile
+                 src/protobuf/Makefile
                  src/demo/Makefile])
 AC_OUTPUT
