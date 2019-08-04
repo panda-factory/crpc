@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+message crpc_msg {
+	required uint32 magic = 1;
+	required uint32 operate = 2;
+}
+
