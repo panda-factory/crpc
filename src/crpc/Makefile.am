@@ -14,7 +14,7 @@ libcrpc_la_LIBADD = \
 				   $(top_srcdir)/src/protobuf/libprotobuf.la
 
 libcrpc_la_LDFLAGS = \
-                     lprotobuf-c -L/usr/lib
+                     -lprotobuf-c -L/usr/lib
 
 
 INCLUDES = \
