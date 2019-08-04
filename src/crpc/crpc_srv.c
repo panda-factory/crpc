@@ -10,7 +10,8 @@
 #include "define.h"
 #include "security.h"
 #include "crpc_protobuf.pb-c.h"
-pf_crpc_method g_crpc_method[CRPC_METHOD_BUTT] = {0};
+
+CrpcMethod g_crpc_method[CRPC_METHOD_BUTT] = {0};
 
 
 #if DESC("内部函数")
