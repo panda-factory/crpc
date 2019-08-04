@@ -79,7 +79,7 @@ typedef struct _crpc_cli_inst_t
     buffer_t    *send_buf;
     buffer_t    *recv_buf;
 
-    crpc_method_t *method;
+    CrpcMethod *method;
 } crpc_cli_inst_t;
 
 typedef struct _crpc_srv_t

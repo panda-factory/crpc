@@ -13,6 +13,8 @@ libcrpc_la_LIBADD = \
 
 INCLUDES = \
 		   -I$(top_srcdir)/include
+		   -I$(top_srcdir)/src/protobuf
+		   
 
 #静态库
 #lib_LIBRARIES=libxxx.a

@@ -10,6 +10,7 @@
 #include "define.h"
 #include "security.h"
 #include "buffer.h"
+#include "crpc_protobuf.pb-c.h"
 
 
 #if DESC("内部函数")
