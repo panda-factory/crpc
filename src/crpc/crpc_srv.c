@@ -10,6 +10,8 @@
 #include "define.h"
 #include "security.h"
 
+pf_crpc_method g_crpc_method[CRPC_METHOD_BUTT] = {0};
+
 
 #if DESC("内部函数")
 /**
@@ -44,13 +46,46 @@ crpc_cli_inst_new()
     return cli;
 }
 
+#if DESC("method 函数")
+/**
+ * 说明：crpc hello world函数，用于测试
+ * 返回：
+ * 备注：
+ */
+static int 
+crpc_method_helloworld()
+{
+	DEBUG_LOG("Hello World!");
+}
+
+/**
+ * 说明：crpc method 安装
+ * 返回：
+ * 备注：
+ */
+static int 
+crpc_method_install(    e_crpc_method name,   int (*pfunc)(void *, ...))
+{
+	if (CRPC_METHOD_BUTT <= name) {
+		ERROR_LOG("CRpc method name is wrong. [%u]", name);
+		return ERROR;
+	}
+	g_crpc_method[name] = pfunc;
+
+	return OK;
+}
+
+
+#endif
+
+#if DESC("operate 函数")
 /**
  * 说明：crpc注册
  * 返回：
  * 备注：
  */
 static int
-crpc_method_register(crpc_cli_inst_t *cli)
+crpc_operate_install(crpc_cli_inst_t *cli)
 {
     const tlv_t *iter = NULL;
     const uint8_t *crpc_data = NULL;
@@ -63,11 +98,11 @@ crpc_method_register(crpc_cli_inst_t *cli)
     for (iter = (tlv_t *)crpc_data; TERMINATOR != iter->type; iter = tlv_next((tlv_t *)iter)) {
         if (T_PLUGIN_NAME == iter->type) {
             cli->name = strdup(iter->value);
-            CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed when register plugin name.");
+            CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed when install plugin name.");
         }
     }
 
-    cli->flag_register = true;
+    cli->flag_install = true;
 
     return OK;
 }
@@ -78,13 +113,10 @@ crpc_method_register(crpc_cli_inst_t *cli)
  * 备注：
  */
 static int
-crpc_method_activate(crpc_cli_inst_t *cli)
+crpc_operate_activate(crpc_cli_inst_t *cli)
 {
-    const tlv_t *iter = NULL;
-    const uint8_t *crpc_data = NULL;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
-    CHECK_NULL_RETURN_ERROR(cli->recv_buf, "plugin recv_buf is NULL.");
 
     cli->flag_activate = true;
 
@@ -92,34 +124,50 @@ crpc_method_activate(crpc_cli_inst_t *cli)
 }
 
 /**
+ * 说明：crpc激活
+ * 返回：
+ * 备注：
+ */
+static int
+crpc_operate_register(crpc_cli_inst_t *cli)
+{
+    CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
+
+    cli->method = g_crpc_method;
+
+    return OK;
+}
+
+
+/**
  * 说明：crpc方法解析函数
  * 返回：
  */
-static e_crpc_method
-crpc_method_parse(crpc_cli_inst_t *cli)
+static e_crpc_operate
+crpc_operate_parse(crpc_cli_inst_t *cli)
 {
-    e_crpc_method method = METHOD_NONE;
+    e_crpc_operate operate = CRPC_OPERATE_NONE;
     crpc_msg_head_t *head = NULL;
 
     if (NULL == cli) {
         ERROR_LOG("cannot receive cli = NULL.");
-        return METHOD_NONE;
+        return CRPC_OPERATE_NONE;
     }
 
     head = (crpc_msg_head_t *)buffer_data(cli->recv_buf);
     if (NULL == head) {
         ERROR_LOG("get message buffer from cli->recv_buf failed.");
-        return METHOD_NONE;
+        return CRPC_OPERATE_NONE;
     }
 
     if (CRPC_MAGIC != head->magic) {
         WARNING_LOG("this message is not for crpc.");
-        return METHOD_NONE;
+        return CRPC_OPERATE_NONE;
     }
-    method = head->method;
+    operate = head->operate;
 
-    DEBUG_LOG("crpc method: [%d]", method);
-    return method;
+    DEBUG_LOG("crpc operate: [%d]", operate);
+    return operate;
 }
 
 /**
@@ -127,30 +175,30 @@ crpc_method_parse(crpc_cli_inst_t *cli)
  * 返回：
  */
 static int
-crpc_method_dispatch(crpc_cli_inst_t *cli)
+crpc_operate_dispatch(crpc_cli_inst_t *cli)
 {
     int ret = ERROR;
-    e_crpc_method method = METHOD_NONE;
+    e_crpc_operate operate = CRPC_OPERATE_NONE;
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL.");
 
-    method = crpc_method_parse(cli);
-    if (METHOD_NONE == method) {
+    operate = crpc_operate_parse(cli);
+    if (CRPC_OPERATE_NONE == operate) {
         ERROR_LOG("crpc method code failed.");
         return OK;
     }
 
-    switch(method) {
-        case METHOD_REGISTER:
-            ret = crpc_method_register(cli);
+    switch(operate) {
+        case CRPC_OPERATE_INSTALL:
+            ret = crpc_operate_install(cli);
             if (OK == ret) {
-                DEBUG_LOG("crpc client [%s] register success!", cli->name);
+                DEBUG_LOG("crpc client [%s] install success!", cli->name);
             }
             else {
-                ERROR_LOG("crpc client register failed!");
+                ERROR_LOG("crpc client install failed!");
             }
             break;
-        case METHOD_ACTIVATE:
-            ret = crpc_method_activate(cli);
+        case CRPC_OPERATE_ACTIVATE:
+            ret = crpc_operate_activate(cli);
             if (OK == ret) {
                 DEBUG_LOG("crpc client [%s] activate success!", cli->name);
             }
@@ -158,11 +206,15 @@ crpc_method_dispatch(crpc_cli_inst_t *cli)
                 ERROR_LOG("crpc client activate failed!");
             }
             break;
+        case CRPC_OPERATE_REGISTE:
+
+		default:
+			ERROR_LOG("crpc operate type is unknow. [%u]", operate);
     }
 
     return OK;
 }
-
+#endif
 /**
  * 说明：服务端接收crpc消息
  * 返回：
@@ -263,8 +315,8 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
             ret = crpc_cli_recv_msg(cli);
             CHECK_OK_RETURN_RET(ret, "receive message failed.");
             
-            ret = crpc_method_dispatch(cli);
-            CHECK_OK_RETURN_RET(ret, "crpc method dispatch failed.");
+            ret = crpc_operate_dispatch(cli);
+            CHECK_OK_RETURN_RET(ret, "crpc operate dispatch failed.");
             
             return OK;
         }

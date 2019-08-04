@@ -121,7 +121,7 @@ crpc_fill_activate_msg(crpc_cli_t *cli)
  * 备注：
  */
 static int
-crpc_fill_msg_head(buffer_t **buf, e_crpc_method method)
+crpc_fill_msg_head(buffer_t **buf, e_crpc_operate operate)
 {
     int ret = ERROR;
     crpc_msg_head_t msg_head;
@@ -129,7 +129,7 @@ crpc_fill_msg_head(buffer_t **buf, e_crpc_method method)
     CHECK_2_NULL_RETURN_ERROR(buf, *buf, "cannot receive buf = NULL.");
 
     msg_head.magic = CRPC_MAGIC;
-    msg_head.method = method;
+    msg_head.operate = operate;
     msg_head.length = 0;
 
     ret = buffer_append(buf, &msg_head, sizeof(crpc_msg_head_t));
@@ -147,14 +147,14 @@ crpc_fill_msg_head(buffer_t **buf, e_crpc_method method)
  * 备注：
  */
 static int
-crpc_build_register_msg(crpc_cli_t *cli)
+crpc_build_install_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
     crpc_msg_head_t *msg_head = NULL;
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL");
 
-    ret = crpc_fill_msg_head(&cli->send_buf, METHOD_REGISTER);
+    ret = crpc_fill_msg_head(&cli->send_buf, METHOD_INSTALL);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_fill_msg_head() failed.");
 
     ret = crpc_fill_register_msg(cli);
@@ -163,7 +163,7 @@ crpc_build_register_msg(crpc_cli_t *cli)
     msg_head = (crpc_msg_head_t *)buffer_data(cli->send_buf);
     msg_head->length = buffer_used(cli->send_buf) - sizeof(crpc_msg_head_t);
 
-    DEBUG_LOG("build register message success: [%d]B.", buffer_used(cli->send_buf));
+    DEBUG_LOG("build install message success: [%d]B.", buffer_used(cli->send_buf));
     return OK;
 }
 
@@ -198,14 +198,14 @@ crpc_build_activate_msg(crpc_cli_t *cli)
  * 备注：
  */
 static int
-crpc_method_register(crpc_cli_t *cli)
+crpc_cli_install(crpc_cli_t *cli)
 {
     int ret = ERROR;
     const tlv_t *iter = NULL;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
 
-    ret = crpc_build_register_msg(cli);
+    ret = crpc_build_install_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_build_msg() failed.");
 
     ret = crpc_cli_send_msg(cli);
@@ -214,7 +214,7 @@ crpc_method_register(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-    DEBUG_LOG("crpc client [%s] register success.", cli->name);
+    DEBUG_LOG("crpc client [%s] install success.", cli->name);
 
     return OK;
 }
@@ -225,7 +225,7 @@ crpc_method_register(crpc_cli_t *cli)
  * 备注：
  */
 static int
-crpc_method_activate(crpc_cli_t *cli)
+crpc_cli_activate(crpc_cli_t *cli)
 {
     int ret = ERROR;
     const tlv_t *iter = NULL;
@@ -241,7 +241,7 @@ crpc_method_activate(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-    DEBUG_LOG("crpc client [%s] register success.", cli->name);
+    DEBUG_LOG("crpc client [%s] activate success.", cli->name);
 
     return OK;
 }
@@ -365,8 +365,8 @@ crpc_cli_run(crpc_cli_t *cli)
 {
     int ret = ERROR;
     
-    ret = crpc_method_register(cli);
-    ret = crpc_method_activate(cli);
+    ret = crpc_cli_install(cli);
+    ret = crpc_cli_activate(cli);
     return;
 }
 

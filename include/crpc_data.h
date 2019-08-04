@@ -12,13 +12,24 @@
 #define CRPC_INST_ID_MASK   (0X0000FFFF)
 #define CRPC_INST_ID_NONE   (0X00000000)
 
+#define CRPC_METHOD_HELLOWORLD CRPC_METHOD_NONE
+typedef enum _e_crpc_operate
+{
+    CRPC_OPERATE_NONE = 0,
+    CRPC_OPERATE_INSTALL,
+    CRPC_OPERATE_ACTIVATE,
+    CRPC_OPERATE_REGISTE,
+    CRPC_OPERATE_CALLBACK,
+    CRPC_OPERATE_KICKOFF,
+    CRPC_OPERATE_BUTT,
+} e_crpc_operate;
+
 typedef enum _e_crpc_method
 {
-    METHOD_NONE = 0,
-    METHOD_REGISTER,
-    METHOD_ACTIVATE,
-    METHOD_KICKOFF,
+    CRPC_METHOD_NONE = 0,
+    CRPC_METHOD_BUTT,
 } e_crpc_method;
+
 
 typedef enum _e_crpc_tlv
 {
@@ -27,17 +38,13 @@ typedef enum _e_crpc_tlv
     TERMINATOR,
 } e_crpc_tlv;
 
-typedef struct _crpc_method_t
-{
-    e_crpc_method name;
-    int (*func)(void *, ...);
-} crpc_method_t;
+typedef int (*pf_crpc_method)(void *, ...);
 
 typedef struct _crpc_msg_head_t
 {
     uint32_t        magic;
     uint32_t        length;
-    e_crpc_method   method;
+    e_crpc_operate   operate;
 } crpc_msg_head_t;
 
 typedef struct _crpc_cli_t
@@ -65,14 +72,12 @@ typedef struct _crpc_cli_inst_t
     uint32_t    id;
     int         sk_fd;
 
-    bool        flag_register;
+    bool        flag_install;
     bool        flag_activate;
 
     int (*method_register)(struct _crpc_cli_t *crpc_cli);
     buffer_t    *send_buf;
-    uint8_t     *psend_buf;
     buffer_t    *recv_buf;
-    uint8_t     *precv_buf;
 
     crpc_method_t *method;
 } crpc_cli_inst_t;
