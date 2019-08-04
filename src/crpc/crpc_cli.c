@@ -28,23 +28,20 @@ static int
 crpc_cli_send_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
-    void *send_buf = NULL;
-    uint32_t send_length = 0;
-    int32_t sent_length = ERROR;
+    buffer_t *send_buf;
+    int32_t sent_len = ERROR;
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
-    send_buf = buffer_data(cli->send_buf);
-    send_length = buffer_used(cli->send_buf);
-    DEBUG_LOG("client send buffer has [%d]B message to be sent.", send_length);
+    send_buf = cli->send_buf;
 
-    sent_length = write(cli->sk_fd, send_buf, send_length);
-    CHECK_ERROR_RETURN_ERROR(sent_length, "write() to socket failed.");
+    sent_len = write(cli->sk_fd, send_buf->data, send_buf->used);
+    CHECK_ERROR_RETURN_ERROR(sent_len, "write() to socket failed.");
 
     ret = buffer_flush(cli->send_buf);
     CHECK_ERROR_RETURN_ERROR(ret, "buffer_flush() failed.");
 
-    DEBUG_LOG("client send message to server: [%d]B.", sent_length);
+    DEBUG_LOG("client send message to server: [%d] Byte.", sent_len);
     return OK;
 }
 
@@ -150,20 +147,26 @@ static int
 crpc_build_install_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
-    crpc_msg_head_t *msg_head = NULL;
+	unsigned int len = 0;
+	CrpcMsg crpc_msg = {0};
 
-    CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL");
+    CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
 
-    ret = crpc_fill_msg_head(&cli->send_buf, METHOD_INSTALL);
-    CHECK_ERROR_RETURN_ERROR(ret, "crpc_fill_msg_head() failed.");
+	crpc_msg__init(&crpc_msg);
+	crpc_msg.magic = CRPC_MAGIC;
+	crpc_msg.name = strdup(cli->name);
+	crpc_msg.operate = CRPC_OPERATE_INSTALL;
 
-    ret = crpc_fill_register_msg(cli);
-    CHECK_ERROR_RETURN_ERROR(ret, "crpc_fill_register_msg() failed.");
+	len = crpc_msg__get_packed_size(&crpc_msg);
+	if (len > cli->send_buf->total) {
+		ERROR_LOG("Build crpc install message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
+		return ERROR;
+	}
+	
+	cli->send_buf->used = len;
+	crpc_msg__pack(&crpc_msg, cli->send_buf->data);
 
-    msg_head = (crpc_msg_head_t *)buffer_data(cli->send_buf);
-    msg_head->length = buffer_used(cli->send_buf) - sizeof(crpc_msg_head_t);
-
-    DEBUG_LOG("build install message success: [%d]B.", buffer_used(cli->send_buf));
+    DEBUG_LOG("build install message success.");
     return OK;
 }
 
@@ -176,19 +179,26 @@ static int
 crpc_build_activate_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
-    crpc_msg_head_t *msg_head = NULL;
+	unsigned int len = 0;
+	CrpcMsg crpc_msg = {0};
 
-    CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL");
+    CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
 
-    ret = crpc_fill_msg_head(&cli->send_buf, METHOD_ACTIVATE);
-    CHECK_ERROR_RETURN_ERROR(ret, "crpc_fill_msg_head() failed.");
+	crpc_msg__init(&crpc_msg);
+	crpc_msg.magic = CRPC_MAGIC;
+	crpc_msg.name = strdup(cli->name);
+	crpc_msg.operate = CRPC_OPERATE_ACTIVATE;
 
-    ret = crpc_fill_register_msg(cli);
-    CHECK_ERROR_RETURN_ERROR(ret, "crpc_fill_register_msg() failed.");
+	len = crpc_msg__get_packed_size(&crpc_msg);
+	if (len > cli->send_buf->total) {
+		ERROR_LOG("Build crpc activate message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
+		return ERROR;
+	}
 
-    msg_head = (crpc_msg_head_t *)buffer_data(cli->send_buf);
-    msg_head->length = buffer_used(cli->send_buf) - sizeof(crpc_msg_head_t);
+	cli->send_buf->used = len;
+	crpc_msg__pack(&crpc_msg, cli->send_buf->data);
 
+    DEBUG_LOG("build activate message success.");
     return OK;
 }
 

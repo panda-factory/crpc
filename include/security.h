@@ -18,4 +18,7 @@ s_memset(void *dst, const size_t max_dst, const int ch, const size_t count);
 extern int
 s_memcpy(void *dst, const size_t max_dst, const void *src, const size_t count);
 
+extern void *
+s_malloc_zero(size_t size);
+
 #endif  //_XSTDLIB_H_

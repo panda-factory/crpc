@@ -170,8 +170,24 @@ buffer_data(buffer_t *buf)
 {
     CHECK_NULL_RETURN_NULL(buf, "input params buf == NULL.");
 
-    return &buf->data;
+    return buf->data;
 }
+
+void *
+buffer_data_dup(buffer_t *buf)
+{
+	void *ptr_data;
+	
+    CHECK_NULL_RETURN_NULL(buf, "input params buf == NULL.");
+
+	ptr_data = malloc(buf->used);
+    CHECK_NULL_RETURN_NULL(buf, "malloc buffer failure.");
+
+	memcpy(ptr_data, buf->data, buf->used);
+
+    return ptr_data;
+}
+
 
 uint32_t
 buffer_used(const buffer_t *buf)

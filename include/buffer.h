@@ -6,7 +6,7 @@
 typedef struct _buffer_t {
     uint32_t    total;
     uint32_t    used;
-    uint8_t     data;
+    uint8_t     data[];
 } buffer_t;
 
 buffer_t *
@@ -32,6 +32,9 @@ buffer_reset(buffer_t *buf);
 
 extern void *
 buffer_data(buffer_t *buf);
+
+extern void *
+buffer_data_dup(buffer_t *buf);
 
 extern uint32_t
 buffer_used(const buffer_t *buf);

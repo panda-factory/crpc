@@ -25,7 +25,7 @@ s_memset(void *dst, size_t max_dst, int ch, size_t count)
     return OK;
 }
 
-extern int
+int
 s_memcpy(void *dst, const size_t max_dst, const void *src, const size_t count)
 {
     if (NULL == dst || NULL == src) {
@@ -44,3 +44,17 @@ s_memcpy(void *dst, const size_t max_dst, const void *src, const size_t count)
 
     return OK;
 }
+
+void *
+s_malloc_zero(size_t size)
+{
+	void *ptrmem = NULL;
+
+	ptrmem = malloc(size);
+	CHECK_NULL_RETURN_NULL(ptrmem, "Alloc memory failed.");
+
+	(void)s_memset(ptrmem, size, 0, size);
+
+	return ptrmem;
+}
+

@@ -9,7 +9,7 @@
 #include "crpc_srv.h"
 #include "define.h"
 #include "security.h"
-
+#include "crpc_protobuf.pb-c.h"
 pf_crpc_method g_crpc_method[CRPC_METHOD_BUTT] = {0};
 
 
@@ -131,7 +131,7 @@ crpc_operate_activate(crpc_cli_inst_t *cli)
 static int
 crpc_operate_register(crpc_cli_inst_t *cli)
 {
-    CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
+    CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL");
 
     cli->method = g_crpc_method;
 
@@ -140,12 +140,13 @@ crpc_operate_register(crpc_cli_inst_t *cli)
 
 
 /**
- * 说明：crpc方法解析函数
+ * 说明：crpc操作解析函数
  * 返回：
  */
 static e_crpc_operate
 crpc_operate_parse(crpc_cli_inst_t *cli)
 {
+	CrpcMsg *ptr_crpc_msg;
     e_crpc_operate operate = CRPC_OPERATE_NONE;
     crpc_msg_head_t *head = NULL;
 
@@ -154,17 +155,14 @@ crpc_operate_parse(crpc_cli_inst_t *cli)
         return CRPC_OPERATE_NONE;
     }
 
-    head = (crpc_msg_head_t *)buffer_data(cli->recv_buf);
-    if (NULL == head) {
-        ERROR_LOG("get message buffer from cli->recv_buf failed.");
-        return CRPC_OPERATE_NONE;
-    }
-
-    if (CRPC_MAGIC != head->magic) {
+	ptr_crpc_msg = crpc_msg__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "crpc msg unpack failed.");
+	
+    if (CRPC_MAGIC != ptr_crpc_msg->magic) {
         WARNING_LOG("this message is not for crpc.");
         return CRPC_OPERATE_NONE;
     }
-    operate = head->operate;
+    operate = ptr_crpc_msg->operate;
 
     DEBUG_LOG("crpc operate: [%d]", operate);
     return operate;
@@ -278,7 +276,7 @@ crpc_srv_awaken(crpc_srv_t *srv)
  * 备注：
  */
 static int
-crpc_cli_recv_msg(crpc_cli_inst_t *cli)
+crpc_srv_recv_msg(crpc_cli_inst_t *cli)
 {
     int ret = ERROR;
     uint8_t recv_buf[BUFFER_SIZE] = {0};
@@ -312,7 +310,7 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
         cli = CONTAINER_OF(iter, crpc_cli_inst_t, list_node);
         if (cli_id == cli->id) {
             DEBUG_LOG("client awaken.");
-            ret = crpc_cli_recv_msg(cli);
+            ret = crpc_srv_recv_msg(cli);
             CHECK_OK_RETURN_RET(ret, "receive message failed.");
             
             ret = crpc_operate_dispatch(cli);
