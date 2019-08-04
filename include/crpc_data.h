@@ -38,7 +38,7 @@ typedef enum _e_crpc_tlv
     TERMINATOR,
 } e_crpc_tlv;
 
-typedef int (*pf_crpc_method)(void *, ...);
+typedef int (*CrpcMethod)(void *, ...);
 
 typedef struct _crpc_msg_head_t
 {
@@ -61,7 +61,7 @@ typedef struct _crpc_cli_t
     buffer_t *send_buf;
     buffer_t *recv_buf;
 
-    crpc_method_t *method;
+    CrpcMethod *method;
 } crpc_cli_t;
 
 typedef struct _crpc_cli_inst_t
