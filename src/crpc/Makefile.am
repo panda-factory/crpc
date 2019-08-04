@@ -10,7 +10,7 @@ libcrpc_la_SOURCES = \
 
 libcrpc_la_LIBADD = \
 				   $(top_srcdir)/src/utils/libutils.la \
-				   $(top_srcdir)/src/utils/libprotobuf.la
+				   $(top_srcdir)/src/protobuf/libprotobuf.la
 
 INCLUDES = \
 		   -I$(top_srcdir)/include \
