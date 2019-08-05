@@ -88,13 +88,10 @@ crpc_method_install(    e_crpc_method name,   int (*pfunc)(void *, ...))
 static int
 crpc_operate_install(crpc_cli_inst_t *cli, CrpcMsg *ptr_crpc_msg)
 {
-    const tlv_t *iter = NULL;
-    const uint8_t *crpc_data = NULL;
-
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
     CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "input param crpc_cli = NULL,");
 
-    cli->name = strdup(iter->value);
+    cli->name = strdup(ptr_crpc_msg->value);
     CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed when install plugin name.");
 
     cli->flag_install = true;
