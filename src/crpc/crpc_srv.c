@@ -91,7 +91,7 @@ crpc_operate_install(crpc_cli_inst_t *cli, CrpcMsg *ptr_crpc_msg)
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
     CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "input param crpc_cli = NULL,");
 
-    cli->name = strdup(ptr_crpc_msg->value);
+    cli->name = strdup(ptr_crpc_msg->name);
     CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed when install plugin name.");
 
     cli->flag_install = true;
