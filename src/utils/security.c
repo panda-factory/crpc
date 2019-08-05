@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "log.h"
+#include "define"
 #include "security.h"
 #include "error.h"
 

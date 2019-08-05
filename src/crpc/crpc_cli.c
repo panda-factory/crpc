@@ -313,6 +313,7 @@ crpc_cli_new()
 
     cli = (crpc_cli_t *)malloc(sizeof(crpc_cli_t));
     CHECK_NULL_RETURN_NULL(cli, "malloc failed.");
+	
     ret = s_memset(cli, sizeof(crpc_cli_t), 0, sizeof(crpc_cli_t));
     if (ERROR == ret) {
         ERROR_LOG("s_memset() failed.");
