@@ -9,7 +9,7 @@ cli_demo_LDADD = \
 				  $(top_srcdir)/src/crpc/libcrpc.la
 
 cli_demo_LDFLAGS = \
-                   -lprotobuf-c -L/usr/lib
+                   -L/usr/local/lib -lprotobuf-c 
 
 INCLUDES = \
 		   -I$(top_srcdir)/include
