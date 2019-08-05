@@ -86,22 +86,16 @@ crpc_method_install(    e_crpc_method name,   int (*pfunc)(void *, ...))
  * 备注：
  */
 static int
-crpc_operate_install(crpc_cli_inst_t *cli)
+crpc_operate_install(crpc_cli_inst_t *cli, CrpcMsg *ptr_crpc_msg)
 {
     const tlv_t *iter = NULL;
     const uint8_t *crpc_data = NULL;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
-    CHECK_NULL_RETURN_ERROR(cli->recv_buf, "plugin recv_buf is NULL.");
+    CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "input param crpc_cli = NULL,");
 
-    crpc_data = buffer_data(cli->recv_buf) + sizeof(crpc_msg_head_t);
-
-    for (iter = (tlv_t *)crpc_data; TERMINATOR != iter->type; iter = tlv_next((tlv_t *)iter)) {
-        if (T_PLUGIN_NAME == iter->type) {
-            cli->name = strdup(iter->value);
-            CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed when install plugin name.");
-        }
-    }
+    cli->name = strdup(iter->value);
+    CHECK_NULL_RETURN_ERROR(cli->name, "strdup() failed when install plugin name.");
 
     cli->flag_install = true;
 
@@ -145,28 +139,17 @@ crpc_operate_register(crpc_cli_inst_t *cli)
  * 返回：
  */
 static e_crpc_operate
-crpc_operate_parse(crpc_cli_inst_t *cli)
+crpc_operate_parse(CrpcMsg *ptr_crpc_msg)
 {
 	CrpcMsg *ptr_crpc_msg;
-    e_crpc_operate operate = CRPC_OPERATE_NONE;
-    crpc_msg_head_t *head = NULL;
 
-    if (NULL == cli) {
+    if (NULL == ptr_crpc_msg) {
         ERROR_LOG("cannot receive cli = NULL.");
         return CRPC_OPERATE_NONE;
     }
 
-	ptr_crpc_msg = crpc_msg__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
-	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "crpc msg unpack failed.");
-	
-    if (CRPC_MAGIC != ptr_crpc_msg->magic) {
-        WARNING_LOG("this message is not for crpc.");
-        return CRPC_OPERATE_NONE;
-    }
-    operate = ptr_crpc_msg->operate;
-
-    DEBUG_LOG("crpc operate: [%d]", operate);
-    return operate;
+    DEBUG_LOG("crpc operate: [%d]", ptr_crpc_msg->operate);
+    return ptr_crpc_msg->operate;
 }
 
 /**
@@ -174,13 +157,14 @@ crpc_operate_parse(crpc_cli_inst_t *cli)
  * 返回：
  */
 static int
-crpc_operate_dispatch(crpc_cli_inst_t *cli)
+crpc_operate_dispatch(crpc_cli_inst_t *cli, CrpcMsg *ptr_crpc_msg)
 {
     int ret = ERROR;
     e_crpc_operate operate = CRPC_OPERATE_NONE;
-    CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL.");
+	
+    CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "cannot accept crpc message is NULL.");
 
-    operate = crpc_operate_parse(cli);
+    operate = crpc_operate_parse(ptr_crpc_msg);
     if (CRPC_OPERATE_NONE == operate) {
         ERROR_LOG("crpc method code failed.");
         return OK;
@@ -188,7 +172,7 @@ crpc_operate_dispatch(crpc_cli_inst_t *cli)
 
     switch(operate) {
         case CRPC_OPERATE_INSTALL:
-            ret = crpc_operate_install(cli);
+            ret = crpc_operate_install(cli, ptr_crpc_msg);
             if (OK == ret) {
                 DEBUG_LOG("crpc client [%s] install success!", cli->name);
             }
@@ -291,7 +275,7 @@ crpc_srv_recv_msg(crpc_cli_inst_t *cli)
     ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
     CHECK_OK_RETURN_RET(ret, "append receive buffer to client instance recv_buf failed.");
 
-    DEBUG_LOG("reveive message from client: [%dB].", recv_length);
+    DEBUG_LOG("reveive message from client: [%d] bytes.", recv_length);
     return OK;
 }
 
@@ -306,6 +290,7 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
     int ret = ERROR;
     list_node_t *iter = NULL;
     crpc_cli_inst_t *cli = NULL;
+	CrpcMsg *ptr_crpc_msg;
 
     for (iter = (srv->inst_list).head; NULL != iter; iter = iter->next) {
         cli = CONTAINER_OF(iter, crpc_cli_inst_t, list_node);
@@ -313,10 +298,19 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
             DEBUG_LOG("client awaken.");
             ret = crpc_srv_recv_msg(cli);
             CHECK_OK_RETURN_RET(ret, "receive message failed.");
-            
-            ret = crpc_operate_dispatch(cli);
+
+			ptr_crpc_msg = ptr_crpc_msg = crpc_msg__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+			CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "crpc msg unpack failed.");
+
+			if (CRPC_MAGIC != ptr_crpc_msg->magic) {
+				ERROR_LOG("Message is not crpc type, magic = [%x]", ptr_crpc_msg->magic);
+				return ERROR;
+			}
+			
+            ret = crpc_operate_dispatch(cli, ptr_crpc_msg);
             CHECK_OK_RETURN_RET(ret, "crpc operate dispatch failed.");
-            
+
+			crpc_msg__free_unpacked(ptr_crpc_msg, NULL);
             return OK;
         }
     }
