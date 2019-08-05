@@ -27,11 +27,12 @@ struct  _CrpcMsg
 {
   ProtobufCMessage base;
   uint32_t magic;
+  char *name;
   uint32_t operate;
 };
 #define CRPC_MSG__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_msg__descriptor) \
-    , 0, 0 }
+    , 0, NULL, 0 }
 
 
 /* CrpcMsg methods */

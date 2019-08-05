@@ -52,7 +52,7 @@ void   crpc_msg__free_unpacked
   assert(message->base.descriptor == &crpc_msg__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor crpc_msg__field_descriptors[2] =
+static const ProtobufCFieldDescriptor crpc_msg__field_descriptors[3] =
 {
   {
     "magic",
@@ -67,8 +67,20 @@ static const ProtobufCFieldDescriptor crpc_msg__field_descriptors[2] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "operate",
+    "name",
     2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    offsetof(CrpcMsg, name),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "operate",
+    3,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
@@ -81,12 +93,13 @@ static const ProtobufCFieldDescriptor crpc_msg__field_descriptors[2] =
 };
 static const unsigned crpc_msg__field_indices_by_name[] = {
   0,   /* field[0] = magic */
-  1,   /* field[1] = operate */
+  1,   /* field[1] = name */
+  2,   /* field[2] = operate */
 };
 static const ProtobufCIntRange crpc_msg__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 0, 3 }
 };
 const ProtobufCMessageDescriptor crpc_msg__descriptor =
 {
@@ -96,7 +109,7 @@ const ProtobufCMessageDescriptor crpc_msg__descriptor =
   "CrpcMsg",
   "",
   sizeof(CrpcMsg),
-  2,
+  3,
   crpc_msg__field_descriptors,
   crpc_msg__field_indices_by_name,
   1,  crpc_msg__number_ranges,
