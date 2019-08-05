@@ -141,8 +141,6 @@ crpc_operate_register(crpc_cli_inst_t *cli)
 static e_crpc_operate
 crpc_operate_parse(CrpcMsg *ptr_crpc_msg)
 {
-	CrpcMsg *ptr_crpc_msg;
-
     if (NULL == ptr_crpc_msg) {
         ERROR_LOG("cannot receive cli = NULL.");
         return CRPC_OPERATE_NONE;
