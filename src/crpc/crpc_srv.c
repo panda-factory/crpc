@@ -237,7 +237,7 @@ crpc_srv_send_msg(crpc_cli_inst_t *cli)
 
     send_buf = cli->send_buf;
 
-    sent_len = write(cli->sk_fd, send_buf->data, send_buf->used);
+    sent_len = send(cli->sk_fd, send_buf->data, send_buf->used, 0);
     CHECK_ERROR_RETURN_ERROR(sent_len, "write() to socket failed.");
 
     ret = buffer_flush(cli->send_buf);
