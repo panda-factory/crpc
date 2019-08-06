@@ -61,7 +61,7 @@ crpc_cli_recv_msg(crpc_cli_t *cli)
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
     do {
-        recv_length = read(cli->sk_fd, recv_buf, BUFFER_SIZE, 0);
+        recv_length = recv(cli->sk_fd, recv_buf, BUFFER_SIZE, 0);
         CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
 
         ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
