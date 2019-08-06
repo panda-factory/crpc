@@ -6,7 +6,7 @@ message crpc_msg {
 	required uint32 operate = 3;
 }
 
-message crpc_msg_ack {
+message crpc_ack_msg {
 	required uint32 magic = 1;
 	required string name = 2;
 	required uint32 result = 3;
