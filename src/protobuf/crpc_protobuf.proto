@@ -1,12 +1,12 @@
 syntax = "proto2";
 
-message crpc_msg {
+message crpc_identity_request {
 	required uint32 magic = 1;
 	required string name = 2;
 	required uint32 operate = 3;
 }
 
-message crpc_ack_msg {
+message crpc_identity_ack {
 	required uint32 magic = 1;
 	required string name = 2;
 	required uint32 result = 3;
