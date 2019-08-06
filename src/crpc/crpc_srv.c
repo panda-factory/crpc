@@ -79,41 +79,6 @@ crpc_method_install(    e_crpc_method name,   int (*pfunc)(void *, ...))
 
 #endif
 
-
-/**
- * 说明：构造crpc注册报文
- * 返回：
- * 备注：
- */
-static int
-crpc_build_ack_msg(crpc_cli_inst_t *cli)
-{
-    int ret = ERROR;
-	unsigned int len = 0;
-	CrpcAckMsg crpc_ack_msg = {0};
-
-    CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
-
-	crpc_ack_msg__init(&crpc_ack_msg);
-	crpc_ack_msg.magic = CRPC_MAGIC;
-	crpc_ack_msg.name = strdup(cli->name);
-	crpc_ack_msg.result = OK;
-
-	len = crpc_ack_msg__get_packed_size(&crpc_ack_msg);
-	if (len > cli->send_buf->total) {
-		ERROR_LOG("Build crpc ack message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
-		return ERROR;
-	}
-	
-	cli->send_buf->used = len;
-	crpc_ack_msg__pack(&crpc_ack_msg, cli->send_buf->data);
-
-	
-    DEBUG_LOG("build ack message success. [%u] bytes", len);
-    return OK;
-}
-
-
 #if DESC("operate 函数")
 /**
  * 说明：crpc注册
@@ -131,7 +96,6 @@ crpc_operate_install(crpc_cli_inst_t *cli, CrpcIdentityRequest *ptr_crpc_msg)
 
     cli->flag_install = true;
 
-	crpc_build_ack_msg()
     return OK;
 }
 
