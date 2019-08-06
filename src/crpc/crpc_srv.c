@@ -121,7 +121,7 @@ crpc_build_ack_msg(crpc_cli_inst_t *cli)
  * 备注：
  */
 static int
-crpc_operate_install(crpc_cli_inst_t *cli, CrpcMsg *ptr_crpc_msg)
+crpc_operate_install(crpc_cli_inst_t *cli, CrpcIdentityRequest *ptr_crpc_msg)
 {
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
     CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "input param crpc_cli = NULL,");
@@ -172,7 +172,7 @@ crpc_operate_register(crpc_cli_inst_t *cli)
  * 返回：
  */
 static e_crpc_operate
-crpc_operate_parse(CrpcMsg *ptr_crpc_msg)
+crpc_operate_parse(CrpcIdentityRequest *ptr_crpc_msg)
 {
     if (NULL == ptr_crpc_msg) {
         ERROR_LOG("cannot receive cli = NULL.");
@@ -188,7 +188,7 @@ crpc_operate_parse(CrpcMsg *ptr_crpc_msg)
  * 返回：
  */
 static int
-crpc_operate_dispatch(crpc_cli_inst_t *cli, CrpcMsg *ptr_crpc_msg)
+crpc_operate_dispatch(crpc_cli_inst_t *cli, CrpcIdentityRequest *ptr_crpc_msg)
 {
     int ret = ERROR;
     e_crpc_operate operate = CRPC_OPERATE_NONE;
@@ -249,6 +249,37 @@ crpc_inst_recv_msg(crpc_cli_inst_t *inst)
         ret = buffer_append(&inst->recv_buf, recv_buf, recv_length);
     } while (0 != recv_length);
 
+    return OK;
+}
+/**
+ * 说明：
+ * 返回：
+ * 备注：
+ */
+
+/**
+ * 说明：发送crpc消息
+ * 返回：
+ * 备注：
+ */
+static int
+crpc_srv_send_msg(crpc_cli_inst_t *cli)
+{
+    int ret = ERROR;
+    buffer_t *send_buf;
+    int32_t sent_len = ERROR;
+
+    CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
+
+    send_buf = cli->send_buf;
+
+    sent_len = write(cli->sk_fd, send_buf->data, send_buf->used);
+    CHECK_ERROR_RETURN_ERROR(sent_len, "write() to socket failed.");
+
+    ret = buffer_flush(cli->send_buf);
+    CHECK_ERROR_RETURN_ERROR(ret, "buffer_flush() failed.");
+
+    DEBUG_LOG("crpc server send message to client: [%d] Byte.", sent_len);
     return OK;
 }
 
@@ -321,7 +352,8 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
     int ret = ERROR;
     list_node_t *iter = NULL;
     crpc_cli_inst_t *cli = NULL;
-	CrpcMsg *ptr_crpc_msg;
+	CrpcIdentityRequest *ptr_crpc_msg;
+	CrpcIdentityAck crpc_id_ack = {0};
 
     for (iter = (srv->inst_list).head; NULL != iter; iter = iter->next) {
         cli = CONTAINER_OF(iter, crpc_cli_inst_t, list_node);
@@ -330,7 +362,7 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
             ret = crpc_srv_recv_msg(cli);
             CHECK_OK_RETURN_RET(ret, "receive message failed.");
 
-			ptr_crpc_msg = ptr_crpc_msg = crpc_msg__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+			ptr_crpc_msg = ptr_crpc_msg = crpc_identity_request__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
 			CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "crpc msg unpack failed.");
 
 			if (CRPC_MAGIC != ptr_crpc_msg->magic) {
@@ -341,7 +373,14 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
             ret = crpc_operate_dispatch(cli, ptr_crpc_msg);
             CHECK_OK_RETURN_RET(ret, "crpc operate dispatch failed.");
 
-			crpc_msg__free_unpacked(ptr_crpc_msg, NULL);
+			crpc_identity_ack__init(&crpc_id_ack);
+			crpc_id_ack.magic = CRPC_MAGIC;
+			crpc_id_ack.name = strdup(ptr_crpc_msg->name);
+			crpc_id_ack.result = ret;
+			crpc_identity_ack__pack(&crpc_id_ack, cli->send_buf->data);
+			crpc_srv_send_msg(cli);
+
+			crpc_identity_request__free_unpacked(ptr_crpc_msg, NULL);
             return OK;
         }
     }

@@ -149,23 +149,23 @@ crpc_build_install_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
 	unsigned int len = 0;
-	CrpcMsg crpc_msg = {0};
+	CrpcIdentityRequest crpc_msg = {0};
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
 
-	crpc_msg__init(&crpc_msg);
+	crpc_identity_request__init(&crpc_msg);
 	crpc_msg.magic = CRPC_MAGIC;
 	crpc_msg.name = strdup(cli->name);
 	crpc_msg.operate = CRPC_OPERATE_INSTALL;
 
-	len = crpc_msg__get_packed_size(&crpc_msg);
+	len = crpc_identity_request__get_packed_size(&crpc_msg);
 	if (len > cli->send_buf->total) {
 		ERROR_LOG("Build crpc install message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
 		return ERROR;
 	}
 	
 	cli->send_buf->used = len;
-	crpc_msg__pack(&crpc_msg, cli->send_buf->data);
+	crpc_identity_request__pack(&crpc_msg, cli->send_buf->data);
 
     DEBUG_LOG("build install message success.");
     return OK;
@@ -181,23 +181,23 @@ crpc_build_activate_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
 	unsigned int len = 0;
-	CrpcMsg crpc_msg = {0};
+	CrpcIdentityRequest crpc_msg = {0};
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
 
-	crpc_msg__init(&crpc_msg);
+	crpc_identity_request__init(&crpc_msg);
 	crpc_msg.magic = CRPC_MAGIC;
 	crpc_msg.name = strdup(cli->name);
 	crpc_msg.operate = CRPC_OPERATE_ACTIVATE;
 
-	len = crpc_msg__get_packed_size(&crpc_msg);
+	len = crpc_identity_request__get_packed_size(&crpc_msg);
 	if (len > cli->send_buf->total) {
 		ERROR_LOG("Build crpc activate message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
 		return ERROR;
 	}
 
 	cli->send_buf->used = len;
-	crpc_msg__pack(&crpc_msg, cli->send_buf->data);
+	crpc_identity_request__pack(&crpc_msg, cli->send_buf->data);
 
     DEBUG_LOG("build activate message success.");
     return OK;
