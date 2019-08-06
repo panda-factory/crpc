@@ -16,7 +16,7 @@ PROTOBUF_C__BEGIN_DECLS
 
 
 typedef struct _CrpcMsg CrpcMsg;
-typedef struct _CrpcMsgAck CrpcMsgAck;
+typedef struct _CrpcAckMsg CrpcAckMsg;
 
 
 /* --- enums --- */
@@ -36,15 +36,15 @@ struct  _CrpcMsg
     , 0, NULL, 0 }
 
 
-struct  _CrpcMsgAck
+struct  _CrpcAckMsg
 {
   ProtobufCMessage base;
   uint32_t magic;
   char *name;
   uint32_t result;
 };
-#define CRPC_MSG_ACK__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&crpc_msg_ack__descriptor) \
+#define CRPC_ACK_MSG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&crpc_ack_msg__descriptor) \
     , 0, NULL, 0 }
 
 
@@ -67,32 +67,32 @@ CrpcMsg *
 void   crpc_msg__free_unpacked
                      (CrpcMsg *message,
                       ProtobufCAllocator *allocator);
-/* CrpcMsgAck methods */
-void   crpc_msg_ack__init
-                     (CrpcMsgAck         *message);
-size_t crpc_msg_ack__get_packed_size
-                     (const CrpcMsgAck   *message);
-size_t crpc_msg_ack__pack
-                     (const CrpcMsgAck   *message,
+/* CrpcAckMsg methods */
+void   crpc_ack_msg__init
+                     (CrpcAckMsg         *message);
+size_t crpc_ack_msg__get_packed_size
+                     (const CrpcAckMsg   *message);
+size_t crpc_ack_msg__pack
+                     (const CrpcAckMsg   *message,
                       uint8_t             *out);
-size_t crpc_msg_ack__pack_to_buffer
-                     (const CrpcMsgAck   *message,
+size_t crpc_ack_msg__pack_to_buffer
+                     (const CrpcAckMsg   *message,
                       ProtobufCBuffer     *buffer);
-CrpcMsgAck *
-       crpc_msg_ack__unpack
+CrpcAckMsg *
+       crpc_ack_msg__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   crpc_msg_ack__free_unpacked
-                     (CrpcMsgAck *message,
+void   crpc_ack_msg__free_unpacked
+                     (CrpcAckMsg *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*CrpcMsg_Closure)
                  (const CrpcMsg *message,
                   void *closure_data);
-typedef void (*CrpcMsgAck_Closure)
-                 (const CrpcMsgAck *message,
+typedef void (*CrpcAckMsg_Closure)
+                 (const CrpcAckMsg *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -101,7 +101,7 @@ typedef void (*CrpcMsgAck_Closure)
 /* --- descriptors --- */
 
 extern const ProtobufCMessageDescriptor crpc_msg__descriptor;
-extern const ProtobufCMessageDescriptor crpc_msg_ack__descriptor;
+extern const ProtobufCMessageDescriptor crpc_ack_msg__descriptor;
 
 PROTOBUF_C__END_DECLS
 
