@@ -60,12 +60,10 @@ crpc_cli_recv_msg(crpc_cli_t *cli)
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
-    do {
-        recv_length = recv(cli->sk_fd, recv_buf, BUFFER_SIZE, 0);
-        CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
+    recv_length = recv(cli->sk_fd, recv_buf, BUFFER_SIZE, 0);
+    CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
 
-        ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
-    } while (0 != recv_length);
+    ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
 
 	DEBUG_LOG("Reveive message from server: [%u] bytes.", recv_length);
     return OK;
