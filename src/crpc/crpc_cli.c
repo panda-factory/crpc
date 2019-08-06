@@ -36,7 +36,7 @@ crpc_cli_send_msg(crpc_cli_t *cli)
 
     send_buf = cli->send_buf;
 
-    sent_len = write(cli->sk_fd, send_buf->data, send_buf->used);
+    sent_len = send(cli->sk_fd, send_buf->data, send_buf->used, 0);
     CHECK_ERROR_RETURN_ERROR(sent_len, "write() to socket failed.");
 
     ret = buffer_flush(cli->send_buf);
@@ -61,7 +61,7 @@ crpc_cli_recv_msg(crpc_cli_t *cli)
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
     do {
-        recv_length = read(cli->sk_fd, recv_buf, BUFFER_SIZE);
+        recv_length = read(cli->sk_fd, recv_buf, BUFFER_SIZE, 0);
         CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
 
         ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
