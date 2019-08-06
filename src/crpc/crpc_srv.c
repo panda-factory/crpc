@@ -341,9 +341,11 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
 			crpc_id_ack.magic = CRPC_MAGIC;
 			crpc_id_ack.name = strdup(ptr_crpc_msg->name);
 			crpc_id_ack.result = ret;
+			cli->send_buf->used = crpc_identity_ack__get_packed_size(&crpc_id_ack);
 			crpc_identity_ack__pack(&crpc_id_ack, cli->send_buf->data);
 			crpc_srv_send_msg(cli);
 
+			free(crpc_id_ack.name);
 			crpc_identity_request__free_unpacked(ptr_crpc_msg, NULL);
             return OK;
         }
