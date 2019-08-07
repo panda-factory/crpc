@@ -7,6 +7,51 @@
 #endif
 
 #include "crpc_protobuf.pb-c.h"
+void   crpc_message_head__init
+                     (CrpcMessageHead         *message)
+{
+  static const CrpcMessageHead init_value = CRPC_MESSAGE_HEAD__INIT;
+  *message = init_value;
+}
+size_t crpc_message_head__get_packed_size
+                     (const CrpcMessageHead *message)
+{
+  assert(message->base.descriptor == &crpc_message_head__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t crpc_message_head__pack
+                     (const CrpcMessageHead *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &crpc_message_head__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t crpc_message_head__pack_to_buffer
+                     (const CrpcMessageHead *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &crpc_message_head__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+CrpcMessageHead *
+       crpc_message_head__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (CrpcMessageHead *)
+     protobuf_c_message_unpack (&crpc_message_head__descriptor,
+                                allocator, len, data);
+}
+void   crpc_message_head__free_unpacked
+                     (CrpcMessageHead *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &crpc_message_head__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 void   crpc_identity_request__init
                      (CrpcIdentityRequest         *message)
 {
@@ -187,7 +232,7 @@ void   crpc_callback_ack__free_unpacked
   assert(message->base.descriptor == &crpc_callback_ack__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor crpc_identity_request__field_descriptors[3] =
+static const ProtobufCFieldDescriptor crpc_message_head__field_descriptors[4] =
 {
   {
     "magic",
@@ -195,7 +240,7 @@ static const ProtobufCFieldDescriptor crpc_identity_request__field_descriptors[3
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(CrpcIdentityRequest, magic),
+    offsetof(CrpcMessageHead, magic),
     NULL,
     NULL,
     0,             /* flags */
@@ -207,15 +252,68 @@ static const ProtobufCFieldDescriptor crpc_identity_request__field_descriptors[3
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(CrpcIdentityRequest, name),
+    offsetof(CrpcMessageHead, name),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "operate",
+    "type",
     3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(CrpcMessageHead, type),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "content",
+    4,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_BYTES,
+    0,   /* quantifier_offset */
+    offsetof(CrpcMessageHead, content),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned crpc_message_head__field_indices_by_name[] = {
+  3,   /* field[3] = content */
+  0,   /* field[0] = magic */
+  1,   /* field[1] = name */
+  2,   /* field[2] = type */
+};
+static const ProtobufCIntRange crpc_message_head__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 4 }
+};
+const ProtobufCMessageDescriptor crpc_message_head__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "crpc_message_head",
+  "CrpcMessageHead",
+  "CrpcMessageHead",
+  "",
+  sizeof(CrpcMessageHead),
+  4,
+  crpc_message_head__field_descriptors,
+  crpc_message_head__field_indices_by_name,
+  1,  crpc_message_head__number_ranges,
+  (ProtobufCMessageInit) crpc_message_head__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor crpc_identity_request__field_descriptors[1] =
+{
+  {
+    "operate",
+    1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
@@ -227,14 +325,12 @@ static const ProtobufCFieldDescriptor crpc_identity_request__field_descriptors[3
   },
 };
 static const unsigned crpc_identity_request__field_indices_by_name[] = {
-  0,   /* field[0] = magic */
-  1,   /* field[1] = name */
-  2,   /* field[2] = operate */
+  0,   /* field[0] = operate */
 };
 static const ProtobufCIntRange crpc_identity_request__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 3 }
+  { 0, 1 }
 };
 const ProtobufCMessageDescriptor crpc_identity_request__descriptor =
 {
@@ -244,42 +340,18 @@ const ProtobufCMessageDescriptor crpc_identity_request__descriptor =
   "CrpcIdentityRequest",
   "",
   sizeof(CrpcIdentityRequest),
-  3,
+  1,
   crpc_identity_request__field_descriptors,
   crpc_identity_request__field_indices_by_name,
   1,  crpc_identity_request__number_ranges,
   (ProtobufCMessageInit) crpc_identity_request__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor crpc_identity_ack__field_descriptors[3] =
+static const ProtobufCFieldDescriptor crpc_identity_ack__field_descriptors[1] =
 {
   {
-    "magic",
-    1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
-    0,   /* quantifier_offset */
-    offsetof(CrpcIdentityAck, magic),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "name",
-    2,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    offsetof(CrpcIdentityAck, name),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
     "result",
-    3,
+    1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
@@ -291,14 +363,12 @@ static const ProtobufCFieldDescriptor crpc_identity_ack__field_descriptors[3] =
   },
 };
 static const unsigned crpc_identity_ack__field_indices_by_name[] = {
-  0,   /* field[0] = magic */
-  1,   /* field[1] = name */
-  2,   /* field[2] = result */
+  0,   /* field[0] = result */
 };
 static const ProtobufCIntRange crpc_identity_ack__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 3 }
+  { 0, 1 }
 };
 const ProtobufCMessageDescriptor crpc_identity_ack__descriptor =
 {
@@ -308,42 +378,18 @@ const ProtobufCMessageDescriptor crpc_identity_ack__descriptor =
   "CrpcIdentityAck",
   "",
   sizeof(CrpcIdentityAck),
-  3,
+  1,
   crpc_identity_ack__field_descriptors,
   crpc_identity_ack__field_indices_by_name,
   1,  crpc_identity_ack__number_ranges,
   (ProtobufCMessageInit) crpc_identity_ack__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor crpc_callback_request__field_descriptors[4] =
+static const ProtobufCFieldDescriptor crpc_callback_request__field_descriptors[2] =
 {
   {
-    "magic",
-    1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
-    0,   /* quantifier_offset */
-    offsetof(CrpcCallbackRequest, magic),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "name",
-    2,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    offsetof(CrpcCallbackRequest, name),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
     "callback_id",
-    3,
+    1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
@@ -355,7 +401,7 @@ static const ProtobufCFieldDescriptor crpc_callback_request__field_descriptors[4
   },
   {
     "paramete",
-    4,
+    2,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_BYTES,
     offsetof(CrpcCallbackRequest, has_paramete),
@@ -367,15 +413,13 @@ static const ProtobufCFieldDescriptor crpc_callback_request__field_descriptors[4
   },
 };
 static const unsigned crpc_callback_request__field_indices_by_name[] = {
-  2,   /* field[2] = callback_id */
-  0,   /* field[0] = magic */
-  1,   /* field[1] = name */
-  3,   /* field[3] = paramete */
+  0,   /* field[0] = callback_id */
+  1,   /* field[1] = paramete */
 };
 static const ProtobufCIntRange crpc_callback_request__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 4 }
+  { 0, 2 }
 };
 const ProtobufCMessageDescriptor crpc_callback_request__descriptor =
 {
@@ -385,42 +429,18 @@ const ProtobufCMessageDescriptor crpc_callback_request__descriptor =
   "CrpcCallbackRequest",
   "",
   sizeof(CrpcCallbackRequest),
-  4,
+  2,
   crpc_callback_request__field_descriptors,
   crpc_callback_request__field_indices_by_name,
   1,  crpc_callback_request__number_ranges,
   (ProtobufCMessageInit) crpc_callback_request__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor crpc_callback_ack__field_descriptors[4] =
+static const ProtobufCFieldDescriptor crpc_callback_ack__field_descriptors[2] =
 {
   {
-    "magic",
-    1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
-    0,   /* quantifier_offset */
-    offsetof(CrpcCallbackAck, magic),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "name",
-    2,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    offsetof(CrpcCallbackAck, name),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
     "callback_id",
-    3,
+    1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
@@ -431,12 +451,12 @@ static const ProtobufCFieldDescriptor crpc_callback_ack__field_descriptors[4] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "return",
-    4,
+    "result",
+    2,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_BYTES,
-    offsetof(CrpcCallbackAck, has_return_),
-    offsetof(CrpcCallbackAck, return_),
+    offsetof(CrpcCallbackAck, has_result),
+    offsetof(CrpcCallbackAck, result),
     NULL,
     NULL,
     0,             /* flags */
@@ -444,15 +464,13 @@ static const ProtobufCFieldDescriptor crpc_callback_ack__field_descriptors[4] =
   },
 };
 static const unsigned crpc_callback_ack__field_indices_by_name[] = {
-  2,   /* field[2] = callback_id */
-  0,   /* field[0] = magic */
-  1,   /* field[1] = name */
-  3,   /* field[3] = return */
+  0,   /* field[0] = callback_id */
+  1,   /* field[1] = result */
 };
 static const ProtobufCIntRange crpc_callback_ack__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 4 }
+  { 0, 2 }
 };
 const ProtobufCMessageDescriptor crpc_callback_ack__descriptor =
 {
@@ -462,7 +480,7 @@ const ProtobufCMessageDescriptor crpc_callback_ack__descriptor =
   "CrpcCallbackAck",
   "",
   sizeof(CrpcCallbackAck),
-  4,
+  2,
   crpc_callback_ack__field_descriptors,
   crpc_callback_ack__field_indices_by_name,
   1,  crpc_callback_ack__number_ranges,

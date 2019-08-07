@@ -15,6 +15,7 @@ PROTOBUF_C__BEGIN_DECLS
 #endif
 
 
+typedef struct _CrpcMessageHead CrpcMessageHead;
 typedef struct _CrpcIdentityRequest CrpcIdentityRequest;
 typedef struct _CrpcIdentityAck CrpcIdentityAck;
 typedef struct _CrpcCallbackRequest CrpcCallbackRequest;
@@ -26,58 +27,82 @@ typedef struct _CrpcCallbackAck CrpcCallbackAck;
 
 /* --- messages --- */
 
-struct  _CrpcIdentityRequest
+struct  _CrpcMessageHead
 {
   ProtobufCMessage base;
   uint32_t magic;
   char *name;
+  uint32_t type;
+  ProtobufCBinaryData content;
+};
+#define CRPC_MESSAGE_HEAD__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&crpc_message_head__descriptor) \
+    , 0, NULL, 0, {0,NULL} }
+
+
+struct  _CrpcIdentityRequest
+{
+  ProtobufCMessage base;
   uint32_t operate;
 };
 #define CRPC_IDENTITY_REQUEST__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_identity_request__descriptor) \
-    , 0, NULL, 0 }
+    , 0 }
 
 
 struct  _CrpcIdentityAck
 {
   ProtobufCMessage base;
-  uint32_t magic;
-  char *name;
   uint32_t result;
 };
 #define CRPC_IDENTITY_ACK__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_identity_ack__descriptor) \
-    , 0, NULL, 0 }
+    , 0 }
 
 
 struct  _CrpcCallbackRequest
 {
   ProtobufCMessage base;
-  uint32_t magic;
-  char *name;
   uint32_t callback_id;
   protobuf_c_boolean has_paramete;
   ProtobufCBinaryData paramete;
 };
 #define CRPC_CALLBACK_REQUEST__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_request__descriptor) \
-    , 0, NULL, 0, 0, {0,NULL} }
+    , 0, 0, {0,NULL} }
 
 
 struct  _CrpcCallbackAck
 {
   ProtobufCMessage base;
-  uint32_t magic;
-  char *name;
   uint32_t callback_id;
-  protobuf_c_boolean has_return_;
-  ProtobufCBinaryData return_;
+  protobuf_c_boolean has_result;
+  ProtobufCBinaryData result;
 };
 #define CRPC_CALLBACK_ACK__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_ack__descriptor) \
-    , 0, NULL, 0, 0, {0,NULL} }
+    , 0, 0, {0,NULL} }
 
 
+/* CrpcMessageHead methods */
+void   crpc_message_head__init
+                     (CrpcMessageHead         *message);
+size_t crpc_message_head__get_packed_size
+                     (const CrpcMessageHead   *message);
+size_t crpc_message_head__pack
+                     (const CrpcMessageHead   *message,
+                      uint8_t             *out);
+size_t crpc_message_head__pack_to_buffer
+                     (const CrpcMessageHead   *message,
+                      ProtobufCBuffer     *buffer);
+CrpcMessageHead *
+       crpc_message_head__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   crpc_message_head__free_unpacked
+                     (CrpcMessageHead *message,
+                      ProtobufCAllocator *allocator);
 /* CrpcIdentityRequest methods */
 void   crpc_identity_request__init
                      (CrpcIdentityRequest         *message);
@@ -156,6 +181,9 @@ void   crpc_callback_ack__free_unpacked
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
+typedef void (*CrpcMessageHead_Closure)
+                 (const CrpcMessageHead *message,
+                  void *closure_data);
 typedef void (*CrpcIdentityRequest_Closure)
                  (const CrpcIdentityRequest *message,
                   void *closure_data);
@@ -174,6 +202,7 @@ typedef void (*CrpcCallbackAck_Closure)
 
 /* --- descriptors --- */
 
+extern const ProtobufCMessageDescriptor crpc_message_head__descriptor;
 extern const ProtobufCMessageDescriptor crpc_identity_request__descriptor;
 extern const ProtobufCMessageDescriptor crpc_identity_ack__descriptor;
 extern const ProtobufCMessageDescriptor crpc_callback_request__descriptor;
