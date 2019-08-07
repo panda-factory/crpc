@@ -15,14 +15,14 @@ message crpc_identity_ack {
 message crpc_callback_request {
 	required uint32 magic = 1;
 	required string name = 2;
-	required uint32 method_id = 3;
+	required uint32 callback_id = 3;
 	optional bytes  paramete = 4;
 }
 
 message crpc_callback_ack {
 	required uint32 magic = 1;
 	required string name = 2;
-	required uint32 method_id = 3;
+	required uint32 callback_id = 3;
 	optional bytes  return = 4;
 }
 

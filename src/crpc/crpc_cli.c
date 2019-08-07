@@ -167,6 +167,8 @@ crpc_build_install_msg(crpc_cli_t *cli)
 	crpc_identity_request__pack(&crpc_msg, cli->send_buf->data);
 
     DEBUG_LOG("build install message success.");
+
+	free(crpc_msg.name);
     return OK;
 }
 
@@ -199,11 +201,48 @@ crpc_build_activate_msg(crpc_cli_t *cli)
 	crpc_identity_request__pack(&crpc_msg, cli->send_buf->data);
 
     DEBUG_LOG("build activate message success.");
+
+	free(crpc_msg.name);
     return OK;
 }
 
 /**
- * 说明：crpc注册
+ * 说明：构造crpc注册报文
+ * 返回：
+ * 备注：
+ */
+static int
+crpc_build_register_msg(crpc_cli_t *cli)
+{
+    int ret = ERROR;
+	unsigned int len = 0;
+	CrpcCallbackRequest crpc_cb_req_msg = {0};
+
+    CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
+
+	crpc_identity_request__init(&crpc_msg);
+	crpc_cb_req_msg.magic = CRPC_MAGIC;
+	crpc_cb_req_msg.name = strdup(cli->name);
+	crpc_cb_req_msg.callback_id = CRPC_CALLBACK_REGISTER;
+
+	len = crpc_callback_request__get_packed_size(&crpc_cb_req_msg);
+	if (len > cli->send_buf->total) {
+		ERROR_LOG("Build crpc callback message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
+		return ERROR;
+	}
+	
+	cli->send_buf->used = len;
+	crpc_callback_request__pack(&crpc_cb_req_msg, cli->send_buf->data);
+
+    DEBUG_LOG("build install message success.");
+
+	free(crpc_cb_req_msg.name);
+    return OK;
+}
+
+
+/**
+ * 说明：crpc安装
  * 返回：
  * 备注：
  */
@@ -264,6 +303,45 @@ crpc_cli_activate(crpc_cli_t *cli)
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
     DEBUG_LOG("crpc client [%s] activate success.", cli->name);
+
+    return OK;
+}
+
+/**
+ * 说明：crpc注册
+ * 返回：
+ * 备注：
+ */
+static int
+crpc_cli_register(crpc_cli_t *cli, e_CrpcCallbackID callback_id)
+{
+    int ret = ERROR;
+	CrpcCallbackAck *ptr_crpc_cb_ack = NULL;
+
+    CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
+
+    ret = crpc_build_register_msg(cli);
+    CHECK_ERROR_RETURN_ERROR(ret, "crpc_build_msg() failed.");
+
+    ret = crpc_cli_send_msg(cli);
+    CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_send_msg() failed.");
+
+    ret = crpc_cli_recv_msg(cli);
+    CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
+
+	ptr_crpc_cb_ack = crpc_callback_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	CHECK_NULL_RETURN_ERROR(ptr_crpc_cb_ack, "crpc ack msg unpack failed.");
+
+	buffer_flush(cli->recv_buf);
+
+	if (OK != ptr_crpc_cb_ack->return_) {
+		ERROR_LOG("crpc client [%s] register failed.", cli->name);
+ 	} else {
+	    DEBUG_LOG("crpc client [%s] register success.", cli->name);
+	}
+
+	crpc_callback_ack__free_unpacked(ptr_crpc_cb_ack, NULL);
+	
 
     return OK;
 }

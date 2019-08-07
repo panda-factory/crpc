@@ -24,11 +24,12 @@ typedef enum _e_crpc_operate
     CRPC_OPERATE_BUTT,
 } e_crpc_operate;
 
-typedef enum _e_crpc_method
+typedef enum _e_CrpcCallbackID
 {
-    CRPC_METHOD_NONE = 0,
-    CRPC_METHOD_BUTT,
-} e_crpc_method;
+    CRPC_CALLBACK_NONE = 0,
+    CRPC_CALLBACK_REGISTER,
+    CRPC_CALLBACK_BUTT,
+} e_CrpcCallbackID;
 
 
 typedef enum _e_crpc_tlv
@@ -79,7 +80,7 @@ typedef struct _crpc_cli_inst_t
     buffer_t    *send_buf;
     buffer_t    *recv_buf;
 
-    CrpcMethod *method;
+    CrpcMethod *callback;
 } crpc_cli_inst_t;
 
 typedef struct _crpc_srv_t

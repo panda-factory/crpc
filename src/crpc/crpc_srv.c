@@ -125,7 +125,7 @@ crpc_operate_register(crpc_cli_inst_t *cli)
 {
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL");
 
-    cli->method = g_crpc_method;
+    cli->callback = g_crpc_method;
 
     return OK;
 }
@@ -326,7 +326,7 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
             ret = crpc_srv_recv_msg(cli);
             CHECK_OK_RETURN_RET(ret, "receive message failed.");
 
-			ptr_crpc_msg = ptr_crpc_msg = crpc_identity_request__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+			ptr_crpc_msg = crpc_identity_request__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
 			CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "crpc msg unpack failed.");
 
 			ret = buffer_flush(cli->recv_buf);
