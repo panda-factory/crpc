@@ -211,7 +211,7 @@ static int
 crpc_cli_install(crpc_cli_t *cli)
 {
     int ret = ERROR;
-    const tlv_t *iter = NULL;
+	CrpcIdentityAck *ptr_crpc_id_ack = NULL;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
 
@@ -224,7 +224,19 @@ crpc_cli_install(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-    DEBUG_LOG("crpc client [%s] install success.", cli->name);
+	ptr_crpc_id_ack = crpc_identity_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	CHECK_NULL_RETURN_ERROR(ptr_crpc_id_ack, "crpc ack msg unpack failed.");
+
+	buffer_flush(cli->recv_buf);
+
+	if (OK != ptr_crpc_id_ack->result) {
+		ERROR_LOG("crpc client [%s] install failed.", cli->name);
+ 	} else {
+	    DEBUG_LOG("crpc client [%s] install success.", cli->name);
+	}
+
+	crpc_identity_ack__free_unpacked(ptr_crpc_id_ack);
+	
 
     return OK;
 }

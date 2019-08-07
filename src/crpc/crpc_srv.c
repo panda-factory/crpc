@@ -296,7 +296,7 @@ crpc_srv_recv_msg(crpc_cli_inst_t *cli)
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
     recv_length = read(cli->sk_fd, recv_buf, BUFFER_SIZE);
-    CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
+    CHECK_ZERO_RETURN_ERROR(recv_length, "read() failed.");
 
     ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
     CHECK_OK_RETURN_RET(ret, "append receive buffer to client instance recv_buf failed.");

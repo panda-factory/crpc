@@ -105,4 +105,13 @@
         } \
     } while (0)
 
+#define CHECK_ZERO_RETURN_ERROR(ret, fmt, ...) \
+	do { \
+		if (0 == ret) { \
+			ERROR_LOG(fmt, ##__VA_ARGS__); \
+			return ERROR; \
+		} \
+	} while (0)
+
+
 #endif //DEFINE_H
