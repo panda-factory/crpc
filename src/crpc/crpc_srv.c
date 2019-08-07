@@ -329,6 +329,9 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
 			ptr_crpc_msg = ptr_crpc_msg = crpc_identity_request__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
 			CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "crpc msg unpack failed.");
 
+			ret = buffer_flush(cli->recv_buf);
+		    CHECK_ERROR_RETURN_ERROR(ret, "buffer_flush() failed.");
+	
 			if (CRPC_MAGIC != ptr_crpc_msg->magic) {
 				ERROR_LOG("Message is not crpc type, magic = [%x]", ptr_crpc_msg->magic);
 				return ERROR;
