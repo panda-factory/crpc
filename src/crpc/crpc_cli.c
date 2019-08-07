@@ -356,6 +356,9 @@ crpc_cli_init(crpc_cli_t *cli, const char *name)
     cli->send_buf = buffer_new(BUFFER_SIZE);
     cli->recv_buf = buffer_new(BUFFER_SIZE);
 
+    ret = crpc_cli_install(cli);
+    ret = crpc_cli_activate(cli);
+
     DEBUG_LOG("crpc client initiate success!.");
     return OK;
 }
@@ -387,9 +390,11 @@ void
 crpc_cli_run(crpc_cli_t *cli)
 {
     int ret = ERROR;
-    
-    ret = crpc_cli_install(cli);
-    ret = crpc_cli_activate(cli);
+
+	for (;;) {
+		;
+	}
+	
     return;
 }
 

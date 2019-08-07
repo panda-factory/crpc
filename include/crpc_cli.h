@@ -18,9 +18,6 @@ crpc_cli_init(crpc_cli_t *cli, const char *name);
 extern void
 crpc_cli_free(crpc_cli_t **cli);
 
-extern int
-crpc_cli_init(crpc_cli_t *cli, const char *name);
-
 extern void 
 crpc_cli_run(crpc_cli_t *cli);
 
