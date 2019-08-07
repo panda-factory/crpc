@@ -55,7 +55,7 @@ struct  _CrpcCallbackRequest
   ProtobufCMessage base;
   uint32_t magic;
   char *name;
-  uint32_t method_id;
+  uint32_t callback_id;
   protobuf_c_boolean has_paramete;
   ProtobufCBinaryData paramete;
 };
@@ -69,7 +69,7 @@ struct  _CrpcCallbackAck
   ProtobufCMessage base;
   uint32_t magic;
   char *name;
-  uint32_t method_id;
+  uint32_t callback_id;
   protobuf_c_boolean has_return_;
   ProtobufCBinaryData return_;
 };

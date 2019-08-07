@@ -342,12 +342,12 @@ static const ProtobufCFieldDescriptor crpc_callback_request__field_descriptors[4
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "method_id",
+    "callback_id",
     3,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(CrpcCallbackRequest, method_id),
+    offsetof(CrpcCallbackRequest, callback_id),
     NULL,
     NULL,
     0,             /* flags */
@@ -367,8 +367,8 @@ static const ProtobufCFieldDescriptor crpc_callback_request__field_descriptors[4
   },
 };
 static const unsigned crpc_callback_request__field_indices_by_name[] = {
+  2,   /* field[2] = callback_id */
   0,   /* field[0] = magic */
-  2,   /* field[2] = method_id */
   1,   /* field[1] = name */
   3,   /* field[3] = paramete */
 };
@@ -419,12 +419,12 @@ static const ProtobufCFieldDescriptor crpc_callback_ack__field_descriptors[4] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "method_id",
+    "callback_id",
     3,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(CrpcCallbackAck, method_id),
+    offsetof(CrpcCallbackAck, callback_id),
     NULL,
     NULL,
     0,             /* flags */
@@ -444,8 +444,8 @@ static const ProtobufCFieldDescriptor crpc_callback_ack__field_descriptors[4] =
   },
 };
 static const unsigned crpc_callback_ack__field_indices_by_name[] = {
+  2,   /* field[2] = callback_id */
   0,   /* field[0] = magic */
-  2,   /* field[2] = method_id */
   1,   /* field[1] = name */
   3,   /* field[3] = return */
 };
