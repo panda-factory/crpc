@@ -61,7 +61,7 @@ crpc_cli_recv_msg(crpc_cli_t *cli)
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
     recv_length = recv(cli->sk_fd, recv_buf, BUFFER_SIZE, 0);
-    CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
+    CHECK_ZERO_RETURN_ERROR(recv_length, "read() failed.");
 
     ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
 
@@ -235,7 +235,7 @@ crpc_cli_install(crpc_cli_t *cli)
 	    DEBUG_LOG("crpc client [%s] install success.", cli->name);
 	}
 
-	crpc_identity_ack__free_unpacked(ptr_crpc_id_ack);
+	crpc_identity_ack__free_unpacked(ptr_crpc_id_ack, NULL);
 	
 
     return OK;
