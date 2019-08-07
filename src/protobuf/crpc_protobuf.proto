@@ -3,8 +3,8 @@ syntax = "proto2";
 message crpc_message_head {
 	required uint32 magic 	= 1;
 	required string name 	= 2;
-	required uint32 type  	= 2;
-	required btyes  content = 2;
+	required uint32 type  	= 3;
+	required btyes  content = 4;
 }
 
 message crpc_identity_request {
