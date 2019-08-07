@@ -17,6 +17,8 @@ PROTOBUF_C__BEGIN_DECLS
 
 typedef struct _CrpcIdentityRequest CrpcIdentityRequest;
 typedef struct _CrpcIdentityAck CrpcIdentityAck;
+typedef struct _CrpcCallbackRequest CrpcCallbackRequest;
+typedef struct _CrpcCallbackAck CrpcCallbackAck;
 
 
 /* --- enums --- */
@@ -46,6 +48,34 @@ struct  _CrpcIdentityAck
 #define CRPC_IDENTITY_ACK__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_identity_ack__descriptor) \
     , 0, NULL, 0 }
+
+
+struct  _CrpcCallbackRequest
+{
+  ProtobufCMessage base;
+  uint32_t magic;
+  char *name;
+  uint32_t method_id;
+  protobuf_c_boolean has_paramete;
+  ProtobufCBinaryData paramete;
+};
+#define CRPC_CALLBACK_REQUEST__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_request__descriptor) \
+    , 0, NULL, 0, 0, {0,NULL} }
+
+
+struct  _CrpcCallbackAck
+{
+  ProtobufCMessage base;
+  uint32_t magic;
+  char *name;
+  uint32_t method_id;
+  protobuf_c_boolean has_return_;
+  ProtobufCBinaryData return_;
+};
+#define CRPC_CALLBACK_ACK__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_ack__descriptor) \
+    , 0, NULL, 0, 0, {0,NULL} }
 
 
 /* CrpcIdentityRequest methods */
@@ -86,6 +116,44 @@ CrpcIdentityAck *
 void   crpc_identity_ack__free_unpacked
                      (CrpcIdentityAck *message,
                       ProtobufCAllocator *allocator);
+/* CrpcCallbackRequest methods */
+void   crpc_callback_request__init
+                     (CrpcCallbackRequest         *message);
+size_t crpc_callback_request__get_packed_size
+                     (const CrpcCallbackRequest   *message);
+size_t crpc_callback_request__pack
+                     (const CrpcCallbackRequest   *message,
+                      uint8_t             *out);
+size_t crpc_callback_request__pack_to_buffer
+                     (const CrpcCallbackRequest   *message,
+                      ProtobufCBuffer     *buffer);
+CrpcCallbackRequest *
+       crpc_callback_request__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   crpc_callback_request__free_unpacked
+                     (CrpcCallbackRequest *message,
+                      ProtobufCAllocator *allocator);
+/* CrpcCallbackAck methods */
+void   crpc_callback_ack__init
+                     (CrpcCallbackAck         *message);
+size_t crpc_callback_ack__get_packed_size
+                     (const CrpcCallbackAck   *message);
+size_t crpc_callback_ack__pack
+                     (const CrpcCallbackAck   *message,
+                      uint8_t             *out);
+size_t crpc_callback_ack__pack_to_buffer
+                     (const CrpcCallbackAck   *message,
+                      ProtobufCBuffer     *buffer);
+CrpcCallbackAck *
+       crpc_callback_ack__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   crpc_callback_ack__free_unpacked
+                     (CrpcCallbackAck *message,
+                      ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*CrpcIdentityRequest_Closure)
@@ -93,6 +161,12 @@ typedef void (*CrpcIdentityRequest_Closure)
                   void *closure_data);
 typedef void (*CrpcIdentityAck_Closure)
                  (const CrpcIdentityAck *message,
+                  void *closure_data);
+typedef void (*CrpcCallbackRequest_Closure)
+                 (const CrpcCallbackRequest *message,
+                  void *closure_data);
+typedef void (*CrpcCallbackAck_Closure)
+                 (const CrpcCallbackAck *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -102,6 +176,8 @@ typedef void (*CrpcIdentityAck_Closure)
 
 extern const ProtobufCMessageDescriptor crpc_identity_request__descriptor;
 extern const ProtobufCMessageDescriptor crpc_identity_ack__descriptor;
+extern const ProtobufCMessageDescriptor crpc_callback_request__descriptor;
+extern const ProtobufCMessageDescriptor crpc_callback_ack__descriptor;
 
 PROTOBUF_C__END_DECLS
 
