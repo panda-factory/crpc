@@ -5,7 +5,7 @@ message crpc_message_head {
 	required uint32 type  	= 2;
 	required uint32 msg_id 	= 3;
 	required string name 	= 4;
-	required btyes  content = 5;
+	required bytes  content = 5;
 }
 
 message crpc_message_ack {
