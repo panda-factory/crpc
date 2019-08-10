@@ -45,16 +45,11 @@ struct  _CrpcMessageHead
 struct  _CrpcMessageAck
 {
   ProtobufCMessage base;
-  uint32_t magic;
-  uint32_t type;
-  uint32_t msg_id;
-  char *name;
   uint32_t result;
-  char *description;
 };
 #define CRPC_MESSAGE_ACK__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_message_ack__descriptor) \
-    , 0, 0, 0, NULL, 0, NULL }
+    , 0 }
 
 
 struct  _CrpcCallbackRequest

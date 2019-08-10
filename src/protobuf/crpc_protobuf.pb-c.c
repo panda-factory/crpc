@@ -367,59 +367,11 @@ const ProtobufCMessageDescriptor crpc_message_head__descriptor =
   (ProtobufCMessageInit) crpc_message_head__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor crpc_message_ack__field_descriptors[6] =
+static const ProtobufCFieldDescriptor crpc_message_ack__field_descriptors[1] =
 {
   {
-    "magic",
-    1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
-    0,   /* quantifier_offset */
-    offsetof(CrpcMessageAck, magic),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "type",
-    2,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
-    0,   /* quantifier_offset */
-    offsetof(CrpcMessageAck, type),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "msg_id",
-    3,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
-    0,   /* quantifier_offset */
-    offsetof(CrpcMessageAck, msg_id),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "name",
-    4,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    offsetof(CrpcMessageAck, name),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
     "result",
-    5,
+    1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
@@ -429,31 +381,14 @@ static const ProtobufCFieldDescriptor crpc_message_ack__field_descriptors[6] =
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
-  {
-    "description",
-    6,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    offsetof(CrpcMessageAck, description),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
 };
 static const unsigned crpc_message_ack__field_indices_by_name[] = {
-  5,   /* field[5] = description */
-  0,   /* field[0] = magic */
-  2,   /* field[2] = msg_id */
-  3,   /* field[3] = name */
-  4,   /* field[4] = result */
-  1,   /* field[1] = type */
+  0,   /* field[0] = result */
 };
 static const ProtobufCIntRange crpc_message_ack__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 6 }
+  { 0, 1 }
 };
 const ProtobufCMessageDescriptor crpc_message_ack__descriptor =
 {
@@ -463,7 +398,7 @@ const ProtobufCMessageDescriptor crpc_message_ack__descriptor =
   "CrpcMessageAck",
   "",
   sizeof(CrpcMessageAck),
-  6,
+  1,
   crpc_message_ack__field_descriptors,
   crpc_message_ack__field_indices_by_name,
   1,  crpc_message_ack__number_ranges,
