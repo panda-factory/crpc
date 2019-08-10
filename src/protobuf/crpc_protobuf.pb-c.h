@@ -42,37 +42,46 @@ struct  _CrpcMessageHead
 struct  _CrpcMessageAck
 {
   ProtobufCMessage base;
-  CrpcMessageHead *head;
+  uint32_t magic;
+  uint32_t type;
+  uint32_t msg_id;
+  char *name;
   uint32_t result;
   char *description;
 };
 #define CRPC_MESSAGE_ACK__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_message_ack__descriptor) \
-    , NULL, 0, NULL }
+    , 0, 0, 0, NULL, 0, NULL }
 
 
 struct  _CrpcCbReqRegister
 {
   ProtobufCMessage base;
-  CrpcMessageHead *head;
+  uint32_t magic;
+  uint32_t type;
+  uint32_t msg_id;
+  char *name;
   uint32_t callback_id;
   uint32_t register_id;
 };
 #define CRPC_CB_REQ_REGISTER__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_cb_req_register__descriptor) \
-    , NULL, 0, 0 }
+    , 0, 0, 0, NULL, 0, 0 }
 
 
 struct  _CrpcCbRespRegister
 {
   ProtobufCMessage base;
-  CrpcMessageHead *head;
+  uint32_t magic;
+  uint32_t type;
+  uint32_t msg_id;
+  char *name;
   uint32_t callback_id;
   uint32_t return_;
 };
 #define CRPC_CB_RESP_REGISTER__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_cb_resp_register__descriptor) \
-    , NULL, 0, 0 }
+    , 0, 0, 0, NULL, 0, 0 }
 
 
 /* CrpcMessageHead methods */
