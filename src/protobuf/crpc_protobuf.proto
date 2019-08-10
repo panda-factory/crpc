@@ -8,21 +8,30 @@ message crpc_message_head {
 }
 
 message crpc_message_ack {
-    required crpc_message_head head = 1;
-	required uint32 result = 2;
-    optional string description = 3;
+	required uint32 magic 	= 1;
+	required uint32 type  	= 2;
+	required uint32 msg_id 	= 3;
+	required string name 	= 4;
+	required uint32 result 	= 5;
+    optional string description = 6;
 }
 
 message crpc_cb_req_register {
-    required crpc_message_head head = 1;
-	required uint32 callback_id = 2;
-	required uint32 register_id = 3;
+	required uint32 magic 	= 1;
+	required uint32 type  	= 2;
+	required uint32 msg_id 	= 3;
+	required string name 	= 4;
+	required uint32 callback_id = 5;
+	required uint32 register_id = 6;
 }
 
 message crpc_cb_resp_register {
-    required crpc_message_head head = 1;
-	required uint32 callback_id = 2;
-	required uint32 return = 3;
+	required uint32 magic 	= 1;
+	required uint32 type  	= 2;
+	required uint32 msg_id 	= 3;
+	required string name 	= 4;
+	required uint32 callback_id = 5;
+	required uint32 return = 6;
 }
 
 
