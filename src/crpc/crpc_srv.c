@@ -125,7 +125,7 @@ crpc_callback_register(crpc_cli_inst_t *cli)
 {
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL");
 
-    cli->callback = g_crpc_method;
+    cli->callback = g_crpc_callback;
 
     return OK;
 }
