@@ -35,33 +35,35 @@ struct  _CrpcMessageHead
   uint32_t type;
   uint32_t msg_id;
   char *name;
-  ProtobufCBinaryData content;
 };
 #define CRPC_MESSAGE_HEAD__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_message_head__descriptor) \
-    , 0, 0, 0, NULL, {0,NULL} }
+    , 0, 0, 0, NULL }
 
 
 struct  _CrpcMessageAck
 {
   ProtobufCMessage base;
+  CrpcMessageHead *head;
   uint32_t result;
+  char *description;
 };
 #define CRPC_MESSAGE_ACK__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_message_ack__descriptor) \
-    , 0 }
+    , NULL, 0, NULL }
 
 
 struct  _CrpcCallbackRequest
 {
   ProtobufCMessage base;
+  CrpcMessageHead *head;
   uint32_t callback_id;
   protobuf_c_boolean has_parameters;
   ProtobufCBinaryData parameters;
 };
 #define CRPC_CALLBACK_REQUEST__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_request__descriptor) \
-    , 0, 0, {0,NULL} }
+    , NULL, 0, 0, {0,NULL} }
 
 
 struct  _CrpcCallbackResponse
