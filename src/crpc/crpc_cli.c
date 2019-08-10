@@ -188,7 +188,7 @@ crpc_build_activate_msg(crpc_cli_t *cli)
 	crpc_msg_head.name = strdup(cli->name);
 
 
-	len = crpc_message_head__get_packed_size(&crpc_msg);
+	len = crpc_message_head__get_packed_size(&crpc_msg_head);
 	if (len > cli->send_buf->total) {
 		ERROR_LOG("Build crpc activate message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
 		return ERROR;
