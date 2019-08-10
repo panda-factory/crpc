@@ -22,7 +22,7 @@ extern int
 buffer_clear(buffer_t *buf, size_t start, size_t length);
 
 extern int
-buffer_append(buffer_t **buf, const void *data_src, const size_t src_size);
+buffer_append(buffer_t *buf, const void *data_src, const size_t src_size);
 
 extern int 
 buffer_expand(buffer_t **buf, const size_t expand_size);

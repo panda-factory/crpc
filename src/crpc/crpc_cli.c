@@ -148,27 +148,22 @@ crpc_build_install_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
 	unsigned int len = 0;
-	CrpcIdentityRequest crpc_msg = {0};
+	CrpcMessageHead crpc_msg_head = {0};
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
 
-	crpc_identity_request__init(&crpc_msg);
-	crpc_msg.magic = CRPC_MAGIC;
-	crpc_msg.name = strdup(cli->name);
-	crpc_msg.operate = CRPC_OPERATE_INSTALL;
+	crpc_message_head__init(&crpc_msg_head);	
+	crpc_msg_head.magic = CRPC_MAGIC;
+	crpc_msg_head.type = CRPC_MSG_TYPE_INSTALL;
+	crpc_msg_head.msg_id = CRPC_MSG_ID_GENERATE;
+	crpc_msg_head.name = strdup(cli->name);
 
-	len = crpc_identity_request__get_packed_size(&crpc_msg);
-	if (len > cli->send_buf->total) {
-		ERROR_LOG("Build crpc install message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
-		return ERROR;
-	}
-	
-	cli->send_buf->used = len;
-	crpc_identity_request__pack(&crpc_msg, cli->send_buf->data);
+	cli->send_buf->used = crpc_message_head__get_packed_size(&crpc_msg_head);
+	crpc_message_head__pack(&crpc_msg_head, cli->send_buf->data);
 
     DEBUG_LOG("build install message success.");
 
-	free(crpc_msg.name);
+	free(crpc_msg_head.name);
     return OK;
 }
 
@@ -182,14 +177,16 @@ crpc_build_activate_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
 	unsigned int len = 0;
-	CrpcIdentityRequest crpc_msg = {0};
+	CrpcMessageHead crpc_msg_head = {0};
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
 
-	crpc_identity_request__init(&crpc_msg);
-	crpc_msg.magic = CRPC_MAGIC;
-	crpc_msg.name = strdup(cli->name);
-	crpc_msg.operate = CRPC_OPERATE_ACTIVATE;
+	crpc_message_head__init(&crpc_msg_head);	
+	crpc_msg_head.magic = CRPC_MAGIC;
+	crpc_msg_head.type = CRPC_MSG_TYPE_ACTIVE;
+	crpc_msg_head.msg_id = CRPC_MSG_ID_GENERATE;
+	crpc_msg_head.name = strdup(cli->name);
+
 
 	len = crpc_identity_request__get_packed_size(&crpc_msg);
 	if (len > cli->send_buf->total) {
@@ -198,11 +195,12 @@ crpc_build_activate_msg(crpc_cli_t *cli)
 	}
 
 	cli->send_buf->used = len;
-	crpc_identity_request__pack(&crpc_msg, cli->send_buf->data);
+	crpc_message_head__pack(&crpc_msg_head, cli->send_buf->data);
 
     DEBUG_LOG("build activate message success.");
 
-	free(crpc_msg.name);
+	free(crpc_msg_head.name);
+
     return OK;
 }
 
@@ -250,9 +248,7 @@ static int
 crpc_cli_install(crpc_cli_t *cli)
 {
     int ret = ERROR;
-	CrpcIdentityAck *ptr_crpc_id_ack = NULL;
-
-    CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
+	CrpcMessageAck *ptr_crpc_msg_ack;
 
     ret = crpc_build_install_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_build_msg() failed.");
@@ -263,19 +259,18 @@ crpc_cli_install(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-	ptr_crpc_id_ack = crpc_identity_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
-	CHECK_NULL_RETURN_ERROR(ptr_crpc_id_ack, "crpc ack msg unpack failed.");
+	ptr_crpc_msg_ack = crpc_message_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
 
 	buffer_flush(cli->recv_buf);
 
-	if (OK != ptr_crpc_id_ack->result) {
+	if (OK != ptr_crpc_msg_ack->result) {
 		ERROR_LOG("crpc client [%s] install failed.", cli->name);
  	} else {
 	    DEBUG_LOG("crpc client [%s] install success.", cli->name);
 	}
 
-	crpc_identity_ack__free_unpacked(ptr_crpc_id_ack, NULL);
-	
+	crpc_message_ack__free_unpacked(ptr_crpc_msg_ack, NULL);
 
     return OK;
 }
@@ -289,7 +284,7 @@ static int
 crpc_cli_activate(crpc_cli_t *cli)
 {
     int ret = ERROR;
-    const tlv_t *iter = NULL;
+	CrpcMessageAck *ptr_crpc_msg_ack;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
 
@@ -302,7 +297,18 @@ crpc_cli_activate(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-    DEBUG_LOG("crpc client [%s] activate success.", cli->name);
+	ptr_crpc_msg_ack = crpc_message_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
+
+	buffer_flush(cli->recv_buf);
+
+	if (OK != ptr_crpc_msg_ack->result) {
+		ERROR_LOG("crpc client [%s] activate failed.", cli->name);
+ 	} else {
+	    DEBUG_LOG("crpc client [%s] activate success.", cli->name);
+	}
+
+	crpc_message_ack__free_unpacked(ptr_crpc_msg_ack, NULL);
 
     return OK;
 }

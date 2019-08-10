@@ -13,6 +13,16 @@
 #define CRPC_INST_ID_NONE   (0X00000000)
 
 #define CRPC_METHOD_HELLOWORLD CRPC_METHOD_NONE
+
+typedef enum _e_CrpcMsgType
+{
+	CRPC_MSG_TYPE_NONE = 0,
+	CRPC_MSG_TYPE_INSTALL,
+	CRPC_MSG_TYPE_ACTIVE,
+	CRPC_MSG_TYPE_REGISTER,
+	CRPC_MSG_TYPE_BUTT
+} e_CrpcMsgType;
+
 typedef enum _e_crpc_operate
 {
     CRPC_OPERATE_NONE = 0,
@@ -93,5 +103,7 @@ typedef struct _crpc_srv_t
 
     list_table_t    inst_list;
 } crpc_srv_t;
+
+#define CRPC_MSG_ID_GENERATE	0
 
 #endif //_CRPC_DATA_H_

@@ -121,21 +121,21 @@ buffer_clear(buffer_t *buf, size_t start, size_t length)
  *      OK for success, ERROR-CODE for others.
  */
 int
-buffer_append(buffer_t **buf, const void *data_src, const size_t data_size)
+buffer_append(buffer_t *buf, const void *data_src, const size_t data_size)
 {
     uint8_t *data_dst = NULL;
     size_t free_size;
 
-    CHECK_2_NULL_RETURN_ERROR(*buf, data_src, "input params buf || data == NULL.");
-    free_size = buffer_unused(*buf);
+    CHECK_2_NULL_RETURN_ERROR(buf, data_src, "input params buf || data == NULL.");
+    free_size = buffer_unused(buf);
     if (free_size < data_size) {
         ERROR_LOG("the free size in buffer is not enough to accept source data.");
         return ERROR;
     }
 
-    data_dst = buffer_data(*buf) + buffer_used(*buf);
+    data_dst = buffer_data(buf) + buffer_used(buf);
     memcpy(data_dst, data_src, data_size);
-    (*buf)->used += data_size;
+    buf->used += data_size;
 
     return OK;
 }
