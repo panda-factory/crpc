@@ -419,12 +419,12 @@ static const ProtobufCFieldDescriptor crpc_cb_resp_register__field_descriptors[3
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "register_id",
+    "return",
     3,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(CrpcCbRespRegister, register_id),
+    offsetof(CrpcCbRespRegister, return_),
     NULL,
     NULL,
     0,             /* flags */
@@ -434,7 +434,7 @@ static const ProtobufCFieldDescriptor crpc_cb_resp_register__field_descriptors[3
 static const unsigned crpc_cb_resp_register__field_indices_by_name[] = {
   1,   /* field[1] = callback_id */
   0,   /* field[0] = head */
-  2,   /* field[2] = register_id */
+  2,   /* field[2] = return */
 };
 static const ProtobufCIntRange crpc_cb_resp_register__number_ranges[1 + 1] =
 {

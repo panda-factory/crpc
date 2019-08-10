@@ -68,7 +68,7 @@ struct  _CrpcCbRespRegister
   ProtobufCMessage base;
   CrpcMessageHead *head;
   uint32_t callback_id;
-  uint32_t register_id;
+  uint32_t return_;
 };
 #define CRPC_CB_RESP_REGISTER__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_cb_resp_register__descriptor) \
