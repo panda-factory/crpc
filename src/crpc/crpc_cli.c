@@ -123,7 +123,7 @@ crpc_fill_msg_head(buffer_t *buf, e_crpc_operate operate)
     int ret = ERROR;
     crpc_msg_head_t msg_head;
 
-    CHECK_2_NULL_RETURN_ERROR(buf, *buf, "cannot receive buf = NULL.");
+    CHECK_NULL_RETURN_ERROR(buf, "cannot receive buf = NULL.");
 
     msg_head.magic = CRPC_MAGIC;
     msg_head.operate = operate;
