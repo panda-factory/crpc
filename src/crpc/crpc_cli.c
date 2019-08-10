@@ -320,7 +320,7 @@ crpc_cli_activate(crpc_cli_t *cli)
  * 备注：
  */
 static int
-crpc_cli_register(crpc_cli_t *cli, e_CrpcCallbackID callback_id)
+crpc_cli_register(crpc_cli_t *cli, e_CrpcCallback callback_id)
 {
     int ret = ERROR;
 	CrpcMessageAck *ptr_crpc_msg_ack = NULL;
