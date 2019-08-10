@@ -210,7 +210,7 @@ crpc_inst_recv_msg(crpc_cli_inst_t *inst)
         recv_length = recv(inst->sk_fd, recv_buf, BUFFER_SIZE, 0);
         CHECK_ERROR_RETURN_ERROR(recv_length, "read() failed.");
 
-        ret = buffer_append(&inst->recv_buf, recv_buf, recv_length);
+        ret = buffer_append(inst->recv_buf, recv_buf, recv_length);
     } while (0 != recv_length);
 
     return OK;
@@ -298,7 +298,7 @@ crpc_srv_recv_msg(crpc_cli_inst_t *cli)
     recv_length = read(cli->sk_fd, recv_buf, BUFFER_SIZE);
     CHECK_ZERO_RETURN_ERROR(recv_length, "read() failed.");
 
-    ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
+    ret = buffer_append(cli->recv_buf, recv_buf, recv_length);
     CHECK_OK_RETURN_RET(ret, "append receive buffer to client instance recv_buf failed.");
 
     DEBUG_LOG("reveive message from client: [%d] bytes.", recv_length);
