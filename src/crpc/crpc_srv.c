@@ -71,7 +71,7 @@ crpc_callback_install(    e_CrpcCallback callback_id,   int (*pfunc)(void *, ...
 		ERROR_LOG("CRpc method name is wrong. [%u]", callback_id);
 		return ERROR;
 	}
-	g_crpc_method[callback_id] = pfunc;
+	g_crpc_callback[callback_id] = pfunc;
 
 	return OK;
 }
