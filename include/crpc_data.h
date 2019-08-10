@@ -20,6 +20,7 @@ typedef enum _e_CrpcMsgType
 	CRPC_MSG_TYPE_INSTALL,
 	CRPC_MSG_TYPE_ACTIVE,
 	CRPC_MSG_TYPE_REGISTER,
+	CRPC_MSG_TYPE_ACK,
 	CRPC_MSG_TYPE_BUTT
 } e_CrpcMsgType;
 
@@ -28,7 +29,7 @@ typedef enum _e_crpc_operate
     CRPC_OPERATE_NONE = 0,
     CRPC_OPERATE_INSTALL,
     CRPC_OPERATE_ACTIVATE,
-    CRPC_OPERATE_REGISTE,
+    CRPC_OPERATE_REGISTER,
     CRPC_OPERATE_CALLBACK,
     CRPC_OPERATE_KICKOFF,
     CRPC_OPERATE_BUTT,
@@ -37,6 +38,7 @@ typedef enum _e_crpc_operate
 typedef enum _e_CrpcCallback
 {
     CRPC_CALLBACK_REGISTER = 0,
+    CRPC_CALLBACK_HELLOWORLD,
     CRPC_CALLBACK_BUTT,
 } e_CrpcCallback;
 

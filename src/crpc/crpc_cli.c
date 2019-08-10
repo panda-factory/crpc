@@ -215,6 +215,8 @@ crpc_build_register_msg(crpc_cli_t *cli)
     int ret = ERROR;
 	unsigned int len = 0;
 	CrpcMessageHead crpc_msg_head = {0};
+	CrpcCallbackRequest crpc_cb_req;
+	CrpcCallbackRegister crpc_cb_reg;
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot accept cli = NULL");
 
@@ -222,7 +224,16 @@ crpc_build_register_msg(crpc_cli_t *cli)
 	crpc_msg_head.magic = CRPC_MAGIC;
 	crpc_msg_head.type = CRPC_MSG_TYPE_REGISTER;
 	crpc_msg_head.msg_id = CRPC_MSG_ID_GENERATE;
-	crpc_msg_head.name = strdup(cli->name);
+	crpc_msg_head.name = cli->name;
+
+	crpc_callback_request__init(&crpc_cb_req);
+	crpc_cb_req.callback_id = CRPC_CALLBACK_REGISTER;
+	crpc_cb_req.has_parameters = true;
+	crpc_callback_request__pack_to_buffer(&crpc_cb_req, crpc_msg_head.content);
+
+	crpc_callback_register__init(&crpc_cb_reg);
+	crpc_cb_reg.register_id = CRPC_CALLBACK_HELLOWORLD;
+	crpc_callback_register__pack_to_buffer(&crpc_cb_reg, crpc_cb_req.parameters);
 
 	len = crpc_message_head__get_packed_size(&crpc_msg_head);
 	if (len > cli->send_buf->total) {
@@ -235,7 +246,6 @@ crpc_build_register_msg(crpc_cli_t *cli)
 
     DEBUG_LOG("build install message success.");
 
-	free(crpc_msg_head.name);
     return OK;
 }
 
