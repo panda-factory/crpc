@@ -56,7 +56,7 @@ crpc_cli_recv_msg(crpc_cli_t *cli)
 {
     int ret = ERROR;
     uint8_t recv_buf[BUFFER_SIZE] = {0};
-    int64_t recv_length = ERROR;
+    int32_t recv_length = ERROR;
 
     CHECK_NULL_RETURN_ERROR(cli, "cannot receive cli = NULL || buf = NULL.");
 
