@@ -19,6 +19,8 @@ typedef struct _CrpcMessageHead CrpcMessageHead;
 typedef struct _CrpcMessageAck CrpcMessageAck;
 typedef struct _CrpcCallbackRequest CrpcCallbackRequest;
 typedef struct _CrpcCallbackResponse CrpcCallbackResponse;
+typedef struct _CrpcCallbackRegister CrpcCallbackRegister;
+typedef struct _CrpcCallbackRegisterReturn CrpcCallbackRegisterReturn;
 
 
 /* --- enums --- */
@@ -59,8 +61,8 @@ struct  _CrpcCallbackRequest
 {
   ProtobufCMessage base;
   uint32_t callback_id;
-  protobuf_c_boolean has_paramete;
-  ProtobufCBinaryData paramete;
+  protobuf_c_boolean has_parameters;
+  ProtobufCBinaryData parameters;
 };
 #define CRPC_CALLBACK_REQUEST__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_request__descriptor) \
@@ -77,6 +79,26 @@ struct  _CrpcCallbackResponse
 #define CRPC_CALLBACK_RESPONSE__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_response__descriptor) \
     , 0, 0, {0,NULL} }
+
+
+struct  _CrpcCallbackRegister
+{
+  ProtobufCMessage base;
+  uint32_t register_id;
+};
+#define CRPC_CALLBACK_REGISTER__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_register__descriptor) \
+    , 0 }
+
+
+struct  _CrpcCallbackRegisterReturn
+{
+  ProtobufCMessage base;
+  uint32_t result;
+};
+#define CRPC_CALLBACK_REGISTER_RETURN__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&crpc_callback_register_return__descriptor) \
+    , 0 }
 
 
 /* CrpcMessageHead methods */
@@ -155,6 +177,44 @@ CrpcCallbackResponse *
 void   crpc_callback_response__free_unpacked
                      (CrpcCallbackResponse *message,
                       ProtobufCAllocator *allocator);
+/* CrpcCallbackRegister methods */
+void   crpc_callback_register__init
+                     (CrpcCallbackRegister         *message);
+size_t crpc_callback_register__get_packed_size
+                     (const CrpcCallbackRegister   *message);
+size_t crpc_callback_register__pack
+                     (const CrpcCallbackRegister   *message,
+                      uint8_t             *out);
+size_t crpc_callback_register__pack_to_buffer
+                     (const CrpcCallbackRegister   *message,
+                      ProtobufCBuffer     *buffer);
+CrpcCallbackRegister *
+       crpc_callback_register__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   crpc_callback_register__free_unpacked
+                     (CrpcCallbackRegister *message,
+                      ProtobufCAllocator *allocator);
+/* CrpcCallbackRegisterReturn methods */
+void   crpc_callback_register_return__init
+                     (CrpcCallbackRegisterReturn         *message);
+size_t crpc_callback_register_return__get_packed_size
+                     (const CrpcCallbackRegisterReturn   *message);
+size_t crpc_callback_register_return__pack
+                     (const CrpcCallbackRegisterReturn   *message,
+                      uint8_t             *out);
+size_t crpc_callback_register_return__pack_to_buffer
+                     (const CrpcCallbackRegisterReturn   *message,
+                      ProtobufCBuffer     *buffer);
+CrpcCallbackRegisterReturn *
+       crpc_callback_register_return__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   crpc_callback_register_return__free_unpacked
+                     (CrpcCallbackRegisterReturn *message,
+                      ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*CrpcMessageHead_Closure)
@@ -169,6 +229,12 @@ typedef void (*CrpcCallbackRequest_Closure)
 typedef void (*CrpcCallbackResponse_Closure)
                  (const CrpcCallbackResponse *message,
                   void *closure_data);
+typedef void (*CrpcCallbackRegister_Closure)
+                 (const CrpcCallbackRegister *message,
+                  void *closure_data);
+typedef void (*CrpcCallbackRegisterReturn_Closure)
+                 (const CrpcCallbackRegisterReturn *message,
+                  void *closure_data);
 
 /* --- services --- */
 
@@ -179,6 +245,8 @@ extern const ProtobufCMessageDescriptor crpc_message_head__descriptor;
 extern const ProtobufCMessageDescriptor crpc_message_ack__descriptor;
 extern const ProtobufCMessageDescriptor crpc_callback_request__descriptor;
 extern const ProtobufCMessageDescriptor crpc_callback_response__descriptor;
+extern const ProtobufCMessageDescriptor crpc_callback_register__descriptor;
+extern const ProtobufCMessageDescriptor crpc_callback_register_return__descriptor;
 
 PROTOBUF_C__END_DECLS
 
