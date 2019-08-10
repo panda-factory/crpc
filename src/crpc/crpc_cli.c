@@ -63,7 +63,7 @@ crpc_cli_recv_msg(crpc_cli_t *cli)
     recv_length = recv(cli->sk_fd, recv_buf, BUFFER_SIZE, 0);
     CHECK_ZERO_RETURN_ERROR(recv_length, "read() failed.");
 
-    ret = buffer_append(&cli->recv_buf, recv_buf, recv_length);
+    ret = buffer_append(cli->recv_buf, recv_buf, recv_length);
 
 	DEBUG_LOG("Reveive message from server: [%u] bytes.", recv_length);
     return OK;
@@ -85,12 +85,12 @@ crpc_fill_register_msg(crpc_cli_t *cli)
 
     tlv = tlv_new(CLIENT_NAME, strlen(cli->name) + 1, cli->name);
     TLV_CHECK_NULL_RETURN_ERROR(tlv, "tlv_new() failed.");
-    ret = buffer_append(&cli->send_buf, tlv, sizeof(tlv_t) + tlv_length(tlv));
+    ret = buffer_append(cli->send_buf, tlv, sizeof(tlv_t) + tlv_length(tlv));
     TLV_CHECK_ERROR_RETURN_ERROR(ret, "buffer_apppend() failed.");
 
     ret = tlv_renew(&tlv, TERMINATOR, 0, NULL);
     TLV_CHECK_ERROR_RETURN_ERROR(ret, "tlv_new() failed.");
-    ret = buffer_append(&cli->send_buf, tlv, sizeof(tlv_t) + tlv_length(tlv));
+    ret = buffer_append(cli->send_buf, tlv, sizeof(tlv_t) + tlv_length(tlv));
     TLV_CHECK_ERROR_RETURN_ERROR(ret, "buffer_apppend() failed.");
 
     tlv_free(&tlv);
@@ -118,7 +118,7 @@ crpc_fill_activate_msg(crpc_cli_t *cli)
  * 备注：
  */
 static int
-crpc_fill_msg_head(buffer_t **buf, e_crpc_operate operate)
+crpc_fill_msg_head(buffer_t *buf, e_crpc_operate operate)
 {
     int ret = ERROR;
     crpc_msg_head_t msg_head;
