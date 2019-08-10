@@ -19,11 +19,19 @@ message crpc_message_ack {
 
 message crpc_callback_request {
 	required uint32 callback_id = 1;
-	optional bytes  paramete 	= 2;
+	optional bytes  parameters 	= 2;
 }
 
 message crpc_callback_response {
 	required uint32 callback_id = 1;
 	optional bytes  result 		= 2;
+}
+
+message crpc_callback_register {
+	required uint32 register_id = 1;
+}
+
+message crpc_callback_register_return {
+	required uint32 result = 1;
 }
 
