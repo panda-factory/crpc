@@ -11,7 +11,7 @@
 #include "security.h"
 #include "crpc_protobuf.pb-c.h"
 
-CrpcMethod g_crpc_method[CRPC_METHOD_BUTT] = {0};
+CrpcCallback g_crpc_callback[CRPC_CALLBACK_BUTT] = {0};
 
 
 #if DESC("内部函数")
@@ -65,13 +65,13 @@ crpc_method_helloworld()
  * 备注：
  */
 static int 
-crpc_method_install(    e_crpc_method name,   int (*pfunc)(void *, ...))
+crpc_callback_install(    e_CrpcCallback callback_id,   int (*pfunc)(void *, ...))
 {
-	if (CRPC_METHOD_BUTT <= name) {
-		ERROR_LOG("CRpc method name is wrong. [%u]", name);
+	if (CRPC_CALLBACK_BUTT <= callback_id) {
+		ERROR_LOG("CRpc method name is wrong. [%u]", callback_id);
 		return ERROR;
 	}
-	g_crpc_method[name] = pfunc;
+	g_crpc_method[callback_id] = pfunc;
 
 	return OK;
 }
@@ -86,7 +86,7 @@ crpc_method_install(    e_crpc_method name,   int (*pfunc)(void *, ...))
  * 备注：
  */
 static int
-crpc_operate_install(crpc_cli_inst_t *cli, CrpcIdentityRequest *ptr_crpc_msg)
+crpc_operate_install(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg)
 {
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
     CHECK_NULL_RETURN_ERROR(ptr_crpc_msg, "input param crpc_cli = NULL,");
