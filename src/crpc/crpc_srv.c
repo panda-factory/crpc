@@ -170,23 +170,32 @@ crpc_callback_helloworld()
 static int
 crpc_operate_callback(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg, CrpcMessageHead *ptr_crpc_msg_ack)
 {
+	unsigned int ret;
 	CrpcCallbackRequest *ptr_crpc_cb_reg;
+	CrpcCallbackResponse crpc_cb_resp;
 	e_CrpcCallback crpc_callback_id = CRPC_CALLBACK_BUTT;
 
 	ptr_crpc_cb_reg = crpc_callback_request__unpack(NULL, ptr_crpc_msg->content.len, ptr_crpc_msg->content.data);
 	crpc_callback_id = ptr_crpc_cb_reg->callback_id;
+	
+    crpc_callback_response__init(&crpc_cb_resp);
 
 	switch(crpc_callback_id) {
 		case CRPC_CALLBACK_REGISTER:
-			crpc_srv_register_callback();
+			ret = crpc_srv_register_callback(cli, ptr_crpc_cb_reg, &crpc_cb_resp);
+			ptr_crpc_msg_ack->contene.len = crpc_callback_response__get_packed_size(&crpc_cb_resp);
+			ptr_crpc_msg_ack->contene.data = s_malloc_zero(ptr_crpc_msg_ack->contene.len);
+			crpc_callback_response__pack(&crpc_cb_resp, ptr_crpc_msg_ack->contene.data);
+
+			free(crpc_cb_resp.result.data);
 			break;
 		case CRPC_CALLBACK_HELLOWORLD:
-			crpc_callback_helloworld();
+			ret = crpc_callback_helloworld();
 			break;
 		default:
 			break;
 	}
-    //cli->callback = g_crpc_callback;
+	
 	
     DEBUG_LOG("crpc callback: [%d]", ptr_crpc_cb_reg->callback_id);
 
