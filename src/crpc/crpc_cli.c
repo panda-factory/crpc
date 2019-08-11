@@ -187,7 +187,6 @@ crpc_build_activate_msg(crpc_cli_t *cli)
 	crpc_msg_head.msg_id = CRPC_MSG_ID_GENERATE;
 	crpc_msg_head.name = strdup(cli->name);
 
-
 	len = crpc_message_head__get_packed_size(&crpc_msg_head);
 	if (len > cli->send_buf->total) {
 		ERROR_LOG("Build crpc activate message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
@@ -222,20 +221,26 @@ crpc_build_register_msg(crpc_cli_t *cli)
 
 	crpc_message_head__init(&crpc_msg_head);
 	crpc_msg_head.magic = CRPC_MAGIC;
-	crpc_msg_head.type = CRPC_MSG_TYPE_REGISTER;
+	crpc_msg_head.type = CRPC_MSG_TYPE_CALLBACK;
 	crpc_msg_head.msg_id = CRPC_MSG_ID_GENERATE;
-	crpc_msg_head.name = cli->name;
+	crpc_msg_head.name = strdup(cli->name);
 
 	crpc_callback_request__init(&crpc_cb_req);
 	crpc_cb_req.callback_id = CRPC_CALLBACK_REGISTER;
-	crpc_cb_req.has_parameters = true;
-	crpc_callback_request__pack_to_buffer(&crpc_cb_req, crpc_msg_head.content);
 
 	crpc_callback_register__init(&crpc_cb_reg);
 	crpc_cb_reg.register_id = CRPC_CALLBACK_HELLOWORLD;
-	crpc_callback_register__pack_to_buffer(&crpc_cb_reg, crpc_cb_req.parameters);
 
-	len = crpc_message_head__get_packed_size(&crpc_msg_head);
+	crpc_cb_req.has_parameters = true;
+	crpc_cb_req.parameters.len = crpc_callback_register__get_packed_size(&crpc_cb_reg);
+	crpc_cb_req.parameters.data = s_malloc_zero(crpc_cb_req.parameters.len);
+	crpc_callback_register__pack(&crpc_cb_reg, crpc_cb_req.parameters.data);
+
+	crpc_msg_head.content.len = crpc_callback_request__get_packed_size(&crpc_cb_req);
+	crpc_msg_head.content.data = s_malloc_zero(crpc_msg_head.content.len);
+	crpc_callback_request__pack(&crpc_cb_req, crpc_msg_head.content.data);
+
+	len = crpc_message_head__get_packed_size(&crpc_cb_req);
 	if (len > cli->send_buf->total) {
 		ERROR_LOG("Build crpc callback message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
 		return ERROR;
@@ -245,6 +250,9 @@ crpc_build_register_msg(crpc_cli_t *cli)
 	crpc_message_head__pack(&crpc_msg_head, cli->send_buf->data);
 
     DEBUG_LOG("build install message success.");
+
+	free(crpc_cb_req.parameters.data);
+	free(crpc_msg_head.content.data);
 
     return OK;
 }
@@ -259,7 +267,8 @@ static int
 crpc_cli_install(crpc_cli_t *cli)
 {
     int ret = ERROR;
-	CrpcMessageAck *ptr_crpc_msg_ack;
+	CrpcMessageHead *ptr_crpc_msg_ack;
+	CrpcMessageAck *ptr_crpc_ack;
 
     ret = crpc_build_install_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_build_msg() failed.");
@@ -270,18 +279,21 @@ crpc_cli_install(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-	ptr_crpc_msg_ack = crpc_message_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	ptr_crpc_msg_ack = crpc_message_head__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
 	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
 
 	buffer_flush(cli->recv_buf);
 
-	if (OK != ptr_crpc_msg_ack->result) {
+	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack.content.len, ptr_crpc_msg_ack.content.data);
+
+	if (OK != ptr_crpc_ack->result) {
 		ERROR_LOG("crpc client [%s] install failed.", cli->name);
  	} else {
 	    DEBUG_LOG("crpc client [%s] install success.", cli->name);
 	}
 
-	crpc_message_ack__free_unpacked(ptr_crpc_msg_ack, NULL);
+	crpc_message_ack__free_unpacked(ptr_crpc_ack, NULL);
+	crpc_message_head__free_unpacked(ptr_crpc_msg_ack, NULL);
 
     return OK;
 }
@@ -295,7 +307,8 @@ static int
 crpc_cli_activate(crpc_cli_t *cli)
 {
     int ret = ERROR;
-	CrpcMessageAck *ptr_crpc_msg_ack;
+	CrpcMessageHead *ptr_crpc_msg_ack;
+	CrpcMessageAck *ptr_crpc_ack;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
 
@@ -308,18 +321,21 @@ crpc_cli_activate(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-	ptr_crpc_msg_ack = crpc_message_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	ptr_crpc_msg_ack = crpc_message_head__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
 	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
 
 	buffer_flush(cli->recv_buf);
 
-	if (OK != ptr_crpc_msg_ack->result) {
+	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack.content.len, ptr_crpc_msg_ack.content.data);
+
+	if (OK != ptr_crpc_ack->result) {
 		ERROR_LOG("crpc client [%s] activate failed.", cli->name);
  	} else {
 	    DEBUG_LOG("crpc client [%s] activate success.", cli->name);
 	}
 
-	crpc_message_ack__free_unpacked(ptr_crpc_msg_ack, NULL);
+	crpc_message_ack__free_unpacked(ptr_crpc_ack, NULL);
+	crpc_message_head__free_unpacked(ptr_crpc_msg_ack, NULL);
 
     return OK;
 }
@@ -333,7 +349,8 @@ static int
 crpc_cli_register(crpc_cli_t *cli, e_CrpcCallback callback_id)
 {
     int ret = ERROR;
-	CrpcMessageAck *ptr_crpc_msg_ack = NULL;
+	CrpcMessageHead *ptr_crpc_msg_ack;
+	CrpcMessageAck *ptr_crpc_ack;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
 
@@ -346,19 +363,21 @@ crpc_cli_register(crpc_cli_t *cli, e_CrpcCallback callback_id)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-	ptr_crpc_msg_ack = crpc_message_ack__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	ptr_crpc_msg_ack = crpc_message_head__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
 	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
 
 	buffer_flush(cli->recv_buf);
 
-	if (OK != ptr_crpc_msg_ack->result) {
+	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack.content.len, ptr_crpc_msg_ack.content.data);
+
+	if (OK != ptr_crpc_ack->result) {
 		ERROR_LOG("crpc client [%s] register failed.", cli->name);
  	} else {
 	    DEBUG_LOG("crpc client [%s] register success.", cli->name);
 	}
 
-	crpc_message_ack__free_unpacked(ptr_crpc_msg_ack, NULL);
-	
+	crpc_message_ack__free_unpacked(ptr_crpc_ack, NULL);
+	crpc_message_head__free_unpacked(ptr_crpc_msg_ack, NULL);
 
     return OK;
 }
