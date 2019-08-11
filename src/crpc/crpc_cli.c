@@ -454,6 +454,7 @@ crpc_cli_helloworld(crpc_cli_t *cli)
 	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
 
 	crpc_cli_send_msg(cli);
+#if 0
 	crpc_cli_recv_msg(cli);
 
 	ptr_crpc_msg_ack = crpc_message_head__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
@@ -469,6 +470,7 @@ crpc_cli_helloworld(crpc_cli_t *cli)
 
 	crpc_message_ack__free_unpacked(ptr_crpc_ack, NULL);
 	crpc_message_head__free_unpacked(ptr_crpc_msg_ack, NULL);
+#endif
 
     return OK;
 }
