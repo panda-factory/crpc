@@ -186,7 +186,7 @@ crpc_operate_dispatch(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg, CrpcM
 			crpc_ack.result = ret;
 			ptr_crpc_msg_ack->content.len = crpc_message_ack__get_packed_size(&crpc_ack);
 			ptr_crpc_msg_ack->content.data = s_malloc_zero(ptr_crpc_msg_ack->content.len);
-			crpc_message_ack__pack(&crpc_ack, crpc_msg_ack.content.data);
+			crpc_message_ack__pack(&crpc_ack, ptr_crpc_msg_ack->content.data);
             break;
         case CRPC_MSG_TYPE_ACTIVE:
             ret = crpc_operate_activate(cli);
@@ -210,9 +210,9 @@ crpc_operate_dispatch(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg, CrpcM
                 ERROR_LOG("crpc client register failed!");
             }
 			crpc_ack.result = ret;
-			crpc_msg_ack.content.len = crpc_message_ack__get_packed_size(&crpc_ack);
-			crpc_msg_ack.content.data = s_malloc_zero(crpc_msg_ack.content.len);
-			crpc_message_ack__pack(&crpc_ack, crpc_msg_ack.content.data);
+			ptr_crpc_msg_ack->content.len = crpc_message_ack__get_packed_size(&crpc_ack);
+			ptr_crpc_msg_ack->content.data = s_malloc_zero(ptr_crpc_msg_ack->content.len);
+			crpc_message_ack__pack(&crpc_ack, ptr_crpc_msg_ack->content.data);
 			break;
 		default:
 			ERROR_LOG("crpc operate type is unknow. [%u]", msg_type);
