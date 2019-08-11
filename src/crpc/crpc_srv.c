@@ -364,7 +364,8 @@ crpc_cli_awaken(crpc_srv_t *srv, const int cli_id)
 				ERROR_LOG("Message is not crpc type, magic = [%x]", ptr_crpc_msg_head->magic);
 				return ERROR;
 			}
-			
+
+			crpc_message_head__init(&crpc_msg_ack);
             ret = crpc_operate_dispatch(cli, ptr_crpc_msg_head, &crpc_msg_ack);
             CHECK_OK_RETURN_RET(ret, "crpc operate dispatch failed.");
 
