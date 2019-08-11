@@ -437,7 +437,7 @@ crpc_cli_helloworld(crpc_cli_t *cli)
 {
     int ret = ERROR;
 	CrpcMessageHead *ptr_crpc_msg_ack;
-	CrpcMessageAck *ptr_crpc_ack;
+	CrpcCallbackResponse *ptr_crpc_cb_resp;
 
     CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
 
@@ -450,12 +450,16 @@ crpc_cli_helloworld(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-	ptr_crpc_msg_ack = crpc_build_callback_msg(cli);
+	ret = crpc_build_callback_msg(cli);
 	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
 
-	buffer_flush(cli->recv_buf);
+	crpc_cli_send_msg(cli);
+	crpc_cli_recv_msg(cli);
 
-	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack->content.len, ptr_crpc_msg_ack->content.data);
+	ptr_crpc_msg_ack = crpc_message_head__unpack(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	buffer_flush(cli->recv_buf);
+	
+	ptr_crpc_cb_resp = crpc_callback_response__unpack(NULL, ptr_crpc_msg_ack->content.len, ptr_crpc_msg_ack->content.data);
 
 	if (OK != ptr_crpc_ack->result) {
 		ERROR_LOG("crpc client [%s] callback failed.", cli->name);
