@@ -450,7 +450,7 @@ crpc_cli_helloworld(crpc_cli_t *cli)
     ret = crpc_cli_recv_msg(cli);
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
-	ptr_crpc_msg_ack = crpc_build_callback_msg(NULL, cli->recv_buf->used, cli->recv_buf->data);
+	ptr_crpc_msg_ack = crpc_build_callback_msg(cli);
 	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
 
 	buffer_flush(cli->recv_buf);
