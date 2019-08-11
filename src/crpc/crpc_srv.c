@@ -133,7 +133,7 @@ crpc_srv_register_callback(crpc_cli_inst_t *cli, CrpcCallbackRequest *ptr_crpc_c
 
     ptr_crpc_cb_reg = crpc_callback_register__unpack(NULL, ptr_crpc_cb_req->parameters.len, ptr_crpc_cb_req->parameters.data);
 
-	cli->callback = &g_crpc_callback;
+	cli->callback = g_crpc_callback;
 
 	crpc_callback_register_return__init(&crpc_cb_ret);
 	crpc_cb_ret.result = OK;
@@ -183,9 +183,9 @@ crpc_operate_callback(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg, CrpcM
 	switch(crpc_callback_id) {
 		case CRPC_CALLBACK_REGISTER:
 			ret = crpc_srv_register_callback(cli, ptr_crpc_cb_reg, &crpc_cb_resp);
-			ptr_crpc_msg_ack->contene.len = crpc_callback_response__get_packed_size(&crpc_cb_resp);
-			ptr_crpc_msg_ack->contene.data = s_malloc_zero(ptr_crpc_msg_ack->contene.len);
-			crpc_callback_response__pack(&crpc_cb_resp, ptr_crpc_msg_ack->contene.data);
+			ptr_crpc_msg_ack->content.len = crpc_callback_response__get_packed_size(&crpc_cb_resp);
+			ptr_crpc_msg_ack->content.data = s_malloc_zero(ptr_crpc_msg_ack->content.len);
+			crpc_callback_response__pack(&crpc_cb_resp, ptr_crpc_msg_ack->content.data);
 
 			free(crpc_cb_resp.result.data);
 			break;
