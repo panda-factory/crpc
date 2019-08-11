@@ -433,7 +433,7 @@ crpc_cli_register(crpc_cli_t *cli, e_CrpcCallback callback_id)
  * 备注：
  */
 static int
-crpc_cli_helloworld(crpc_cli_t *cli)
+crpc_cli_callback_helloworld(crpc_cli_t *cli)
 {
     int ret = ERROR;
 	CrpcMessageHead *ptr_crpc_msg_ack;
@@ -598,7 +598,7 @@ void
 crpc_cli_run(crpc_cli_t *cli)
 {
     int ret = ERROR;
-
+	crpc_cli_callback_helloworld(cli);
 	for (;;) {
 		;
 	}
