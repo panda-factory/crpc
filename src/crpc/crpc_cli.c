@@ -451,7 +451,7 @@ crpc_cli_callback_helloworld(crpc_cli_t *cli)
     CHECK_ERROR_RETURN_ERROR(ret, "crpc_cli_recv_msg() failed.");
 
 	ret = crpc_build_callback_msg(cli);
-	CHECK_NULL_RETURN_ERROR(ptr_crpc_msg_ack, "crpc ack msg unpack failed.");
+	CHECK_ERROR_RETURN_ERROR(ptr_crpc_msg_ack, "crpc build callback msg failed.");
 
 	crpc_cli_send_msg(cli);
 #if 0
