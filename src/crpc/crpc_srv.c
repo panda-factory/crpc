@@ -118,17 +118,74 @@ crpc_operate_activate(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg)
 }
 
 /**
+ * 说明：crpc激活
+ * 返回：
+ * 备注：
+ */
+static int
+crpc_srv_register_callback(crpc_cli_inst_t *cli, CrpcCallbackRequest *ptr_crpc_cb_req, CrpcCallbackResponse *ptr_crpc_cb_resq)
+{
+	CrpcMessageAck crpc_msg_ack;
+	CrpcCallbackRegister *ptr_crpc_cb_reg;
+	CrpcCallbackRegisterReturn crpc_cb_ret;
+
+    CHECK_NULL_RETURN_ERROR(cli, "input param crpc_cli = NULL,");
+
+    ptr_crpc_cb_reg = crpc_callback_register__unpack(NULL, ptr_crpc_cb_req->parameters.len, ptr_crpc_cb_req->parameters.data);
+
+	cli->callback = &g_crpc_callback;
+
+	crpc_callback_register_return__init(&crpc_cb_ret);
+	crpc_cb_ret.result = OK;
+	ptr_crpc_cb_resq->has_result = true;
+	ptr_crpc_cb_resq->result.len = crpc_callback_register_return__get_packed_size(&crpc_cb_ret);
+	ptr_crpc_cb_resq->result.data = s_malloc_zero(ptr_crpc_cb_resq->result.len);
+
+	crpc_callback_register_return__pack(&crpc_cb_ret, ptr_crpc_cb_resq->result.data);
+	
+    DEBUG_LOG("crpc register callback: [%d]", ptr_crpc_cb_reg->register_id);
+	
+    return OK;
+}
+
+/**
+ * 说明：crpc激活
+ * 返回：
+ * 备注：
+ */
+static int
+crpc_callback_helloworld()
+{
+	
+    DEBUG_LOG("crpc callback: [HelloWorld]");
+	
+    return OK;
+}
+
+/**
  * 说明：crpc注册
  * 返回：
  * 备注：
  */
 static int
-crpc_operate_callback(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg)
+crpc_operate_callback(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg, CrpcMessageHead *ptr_crpc_msg_ack)
 {
 	CrpcCallbackRequest *ptr_crpc_cb_reg;
+	e_CrpcCallback crpc_callback_id = CRPC_CALLBACK_BUTT;
 
 	ptr_crpc_cb_reg = crpc_callback_request__unpack(NULL, ptr_crpc_msg->content.len, ptr_crpc_msg->content.data);
+	crpc_callback_id = ptr_crpc_cb_reg->callback_id;
 
+	switch(crpc_callback_id) {
+		case CRPC_CALLBACK_REGISTER:
+			crpc_srv_register_callback();
+			break;
+		case CRPC_CALLBACK_HELLOWORLD:
+			crpc_callback_helloworld();
+			break;
+		default:
+			break;
+	}
     //cli->callback = g_crpc_callback;
 	
     DEBUG_LOG("crpc callback: [%d]", ptr_crpc_cb_reg->callback_id);
@@ -202,7 +259,7 @@ crpc_operate_dispatch(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg, CrpcM
 			crpc_message_ack__pack(&crpc_ack, ptr_crpc_msg_ack->content.data);
             break;
         case CRPC_MSG_TYPE_CALLBACK:
-			ret = crpc_operate_callback(cli, ptr_crpc_msg);
+			ret = crpc_operate_callback(cli, ptr_crpc_msg, ptr_crpc_msg_ack);
             if (OK == ret) {
                 DEBUG_LOG("crpc client [%s] register success!", cli->name);
             }
