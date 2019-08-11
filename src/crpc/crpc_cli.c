@@ -472,6 +472,7 @@ crpc_cli_init(crpc_cli_t *cli, const char *name)
 
     ret = crpc_cli_install(cli);
     ret = crpc_cli_activate(cli);
+	ret = crpc_cli_register(cli, CRPC_CALLBACK_HELLOWORLD);
 
     DEBUG_LOG("crpc client initiate success!.");
     return OK;
