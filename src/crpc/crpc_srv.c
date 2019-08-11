@@ -189,7 +189,7 @@ crpc_operate_dispatch(crpc_cli_inst_t *cli, CrpcMessageHead *ptr_crpc_msg, CrpcM
 			crpc_message_ack__pack(&crpc_ack, ptr_crpc_msg_ack->content.data);
             break;
         case CRPC_MSG_TYPE_ACTIVE:
-            ret = crpc_operate_activate(cli);
+            ret = crpc_operate_activate(cli, ptr_crpc_msg);
             if (OK == ret) {
                 DEBUG_LOG("crpc client [%s] activate success!", cli->name);
             }
