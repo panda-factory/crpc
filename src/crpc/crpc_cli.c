@@ -240,7 +240,7 @@ crpc_build_register_msg(crpc_cli_t *cli)
 	crpc_msg_head.content.data = s_malloc_zero(crpc_msg_head.content.len);
 	crpc_callback_request__pack(&crpc_cb_req, crpc_msg_head.content.data);
 
-	len = crpc_message_head__get_packed_size(&crpc_cb_req);
+	len = crpc_message_head__get_packed_size(&crpc_msg_head);
 	if (len > cli->send_buf->total) {
 		ERROR_LOG("Build crpc callback message failed. message len[%u], buffer len[%u]", len, cli->send_buf->total);
 		return ERROR;
@@ -284,7 +284,7 @@ crpc_cli_install(crpc_cli_t *cli)
 
 	buffer_flush(cli->recv_buf);
 
-	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack.content.len, ptr_crpc_msg_ack.content.data);
+	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack->content.len, ptr_crpc_msg_ack->content.data);
 
 	if (OK != ptr_crpc_ack->result) {
 		ERROR_LOG("crpc client [%s] install failed.", cli->name);
@@ -326,7 +326,7 @@ crpc_cli_activate(crpc_cli_t *cli)
 
 	buffer_flush(cli->recv_buf);
 
-	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack.content.len, ptr_crpc_msg_ack.content.data);
+	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack->content.len, ptr_crpc_msg_ack->content.data);
 
 	if (OK != ptr_crpc_ack->result) {
 		ERROR_LOG("crpc client [%s] activate failed.", cli->name);
@@ -368,7 +368,7 @@ crpc_cli_register(crpc_cli_t *cli, e_CrpcCallback callback_id)
 
 	buffer_flush(cli->recv_buf);
 
-	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack.content.len, ptr_crpc_msg_ack.content.data);
+	ptr_crpc_ack = crpc_message_ack__unpack(NULL, ptr_crpc_msg_ack->content.len, ptr_crpc_msg_ack->content.data);
 
 	if (OK != ptr_crpc_ack->result) {
 		ERROR_LOG("crpc client [%s] register failed.", cli->name);
